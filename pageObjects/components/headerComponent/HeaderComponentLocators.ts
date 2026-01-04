@@ -1,0 +1,31 @@
+// baseLocator object is a realization of Facade and Adapter patterns
+
+import { Locator } from "@playwright/test";
+import BaseLocators from "../../pages/base/BaseLocators";
+
+//this class interacts only with locators
+export default class HeaderComponentLocators extends BaseLocators {
+  //extend from BaseLocators because it already has implemented constructor with initialization of baseLocator
+  readonly signInButton: Locator = this.baseLocator.locator(
+    "#_desktop_user_info"
+  );
+  readonly cartButton: Locator = this.baseLocator.locator("[class*=blockcart]");
+  readonly searchInput: Locator = this.baseLocator.locator(
+    '#search_widget input[class="ui-autocomplete-input"]'
+  );
+  readonly logo: Locator = this.baseLocator.locator("#_desktop_logo");
+  readonly signOutButton: Locator =
+    this.baseLocator.locator("a[class*=logout]");
+  readonly currentUserButton: Locator =
+    this.baseLocator.locator("a[class=account]");
+
+  readonly clothesButton: Locator = this.baseLocator.getByRole("link", {
+    name: "Clothes",
+  });
+  readonly accessoriesButton: Locator = this.baseLocator.getByRole("link", {
+    name: "Accessories",
+  });
+  readonly artButton: Locator = this.baseLocator.getByRole("link", {
+    name: "Art",
+  });
+}
