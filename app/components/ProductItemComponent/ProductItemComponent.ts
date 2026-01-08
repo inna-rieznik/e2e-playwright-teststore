@@ -1,5 +1,5 @@
 import { Locator } from "@playwright/test";
-import BaseComponent from "../base/BaseComponent";
+import BaseComponent from "../Base/BaseComponent";
 import ProductItemComponentLocators from "./ProductItemComponentLocators";
 
 //part of the page

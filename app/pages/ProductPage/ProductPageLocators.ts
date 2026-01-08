@@ -1,5 +1,5 @@
 import { Locator } from "@playwright/test";
-import BaseLocators from "../../pages/base/BaseLocators";
+import BaseLocators from "../Base/BaseLocators";
 
 export default class ProductPageLocators extends BaseLocators {
   readonly addToCartButton: Locator = this.baseLocator.locator(

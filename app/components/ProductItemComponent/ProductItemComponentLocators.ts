@@ -1,5 +1,5 @@
 import { Locator } from "@playwright/test";
-import BaseLocators from "../../pages/base/BaseLocators";
+import BaseLocators from "../../pages/Base/BaseLocators";
 
 export default class ProductItemComponentLocators extends BaseLocators {
   readonly addToWishlistButton: Locator = this.baseLocator.locator(
@@ -18,6 +18,6 @@ export default class ProductItemComponentLocators extends BaseLocators {
     ".product-miniature > .thumbnail-container > .thumbnail-top > .highlighted-informations"
   ); //visible only on hover -> opens modal
   readonly quickViewButton: Locator = this.baseLocator.getByRole("link", {
-    name: " Quick view",
+    name: "Quick view",
   });
 }
