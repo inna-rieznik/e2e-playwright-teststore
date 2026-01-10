@@ -7,7 +7,7 @@ export default abstract class BasePage {
 
   constructor(page: Page) {
     this.page = page;
-    this.header = new HeaderComponent(this.page.locator("header"));
+    this.header = new HeaderComponent(this.page.locator("#header"));
   }
 
   //can be methods

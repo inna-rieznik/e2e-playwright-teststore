@@ -67,3 +67,26 @@ npx playwright show-report
 ## Configuration
 
 The test configuration is set in `playwright.config.ts`. The base URL is configured to point to the test store, and tests run on Chromium by default.
+
+
+## Tags for executing specific tests
+
+These tags decide when tests run.
+- **@smoke** - Minimal critical path. Runs on every deploy / PR.
+- **@regression** - Full stable suite. Runs nightly or before release.
+- **@blocking** - Failure = release stopper.
+- **@slow** - Excluded from fast pipelines.
+- **@flaky** - Tracked separately, often excluded or retried.
+- ****
+
+Test lifecycle / maturity
+- **@new**
+- **@legacy**
+- **@refactor-needed**
+
+Risk / business-domain tags
+- **@auth**
+
+- **@payment**
+
+- **@checkout**
