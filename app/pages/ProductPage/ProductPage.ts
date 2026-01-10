@@ -9,6 +9,4 @@ export default class ProductPage extends BasePage {
     super(page);
     this.productContainerComponent = new ProductContainerComponent(this.page.locator("#main .col-md-6")); //new HeaderComponent(this.page.locator("header"));
   }
-
-  
 }
