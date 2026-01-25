@@ -21,4 +21,12 @@ export default class HeaderComponent extends BaseComponent {
   getCartProductsCount(): Locator {
     return this.locators.cartButtonProductsCount;
   }
+
+  getSignInButton(): Locator {
+    return this.locators.signInButton;
+  }
+
+  getCurrentUserButton(): Locator {
+     return this.locators.currentUserButton;
+  }
 }

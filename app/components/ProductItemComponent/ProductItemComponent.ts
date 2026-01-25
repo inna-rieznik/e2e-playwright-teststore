@@ -2,7 +2,6 @@ import { Locator } from "@playwright/test";
 import BaseComponent from "../Base/BaseComponent";
 import ProductItemComponentLocators from "./ProductItemComponentLocators";
 
-//part of the page
 export default class ProductItemComponent extends BaseComponent {
   readonly locators: ProductItemComponentLocators =
     new ProductItemComponentLocators(this.baseLocator);

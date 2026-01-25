@@ -5,6 +5,10 @@ export default class HomePage extends BasePage {
   private getBaseProductItemLocator = (productName: string) =>
     `//h3[contains(@class, "product-title")]//a[normalize-space(text())="${productName}"]/ancestor::article[contains(@class, "product-miniature")]`;
 
+   async goto() {
+    await this.page.goto('/');
+  }
+
   getProductItem(productName: string) {
     const item = new ProductItemComponent(
       this.page.locator(this.getBaseProductItemLocator(productName))
