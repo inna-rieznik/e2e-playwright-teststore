@@ -1,7 +1,7 @@
 import BaseLocators from '../Base/BaseLocators';
 
 export default class LoginPageLocators extends BaseLocators {
-  readonly loginInput = this.baseLocator.getByRole('textbox', { name: 'Email' });
+  readonly emailInput = this.baseLocator.getByRole('textbox', { name: 'Email' });
 
   readonly passwordInput = this.baseLocator.getByRole('textbox', { name: 'Password input' });
 

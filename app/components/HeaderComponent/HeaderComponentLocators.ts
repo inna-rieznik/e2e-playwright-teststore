@@ -9,6 +9,7 @@ export default class HeaderComponentLocators extends BaseLocators {
   readonly signInButton: Locator = this.baseLocator.locator('#_desktop_user_info');
 
   readonly cartButton: Locator = this.baseLocator.locator('[class*=blockcart]');
+
   readonly cartButtonProductsCount: Locator = this.baseLocator.locator('.cart-products-count');
 
   readonly searchInput: Locator = this.baseLocator.locator(
@@ -34,5 +35,6 @@ export default class HeaderComponentLocators extends BaseLocators {
   });
 
   readonly userButton: Locator = this.baseLocator.locator('.account');
+
   readonly userButtonText: Locator = this.userButton.locator('span.hidden-sm-down');
 }

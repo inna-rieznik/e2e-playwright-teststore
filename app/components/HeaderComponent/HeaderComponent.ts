@@ -11,7 +11,11 @@ export default class HeaderComponent extends BaseComponent {
   }
 
   async clickCartButton() {
-    this.locators.cartButton.click();
+    await this.locators.cartButton.click();
+  }
+
+  async clickSignOutButton() {
+    await this.locators.signOutButton.click();
   }
 
   getCartProductsCount(): Locator {

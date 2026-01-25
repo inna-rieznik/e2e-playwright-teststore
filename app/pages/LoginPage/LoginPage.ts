@@ -9,19 +9,19 @@ export default class LoginPage extends BasePage {
   }
 
   async fillEmail(email: string) {
-    this.locators.loginInput.fill(email);
+    await this.locators.emailInput.fill(email);
   }
 
   async fillPassword(password: string) {
-    this.locators.passwordInput.fill(password);
+    await this.locators.passwordInput.fill(password);
   }
 
   async clickShowPasswordButton() {
-    this.locators.showPasswordButton.click();
+    await this.locators.showPasswordButton.click();
   }
 
   async clickSignInButton() {
-    this.locators.signInButton.click();
+    await this.locators.signInButton.click();
   }
 
   async performSignIn({ email, password }: { email: string; password: string }) {
