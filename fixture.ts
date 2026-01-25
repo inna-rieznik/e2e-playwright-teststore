@@ -1,15 +1,18 @@
-import { test as base } from '@playwright/test';
+import { test as base, expect } from '@playwright/test';
 import LoginPage from './app/pages/LoginPage/LoginPage';
 import HomePage from './app/pages/HomePage/HomePage';
 import ProductPage from './app/pages/ProductPage/ProductPage';
 import { requireEnv } from './support';
+import ShoppingCartPage from './app/pages/ShoppingCartPage/ShoppingCartPage';
 
 type MyFixture = {
   loginPage: LoginPage;
   homePage: HomePage;
   productPage: ProductPage;
-  beforeFixture: void;
-  afterFixture: void;
+  shoppingCartPage: ShoppingCartPage;
+  loginBeforeTest: void;
+  logOutAfterTest: void;
+  authCookie: string;
 };
 
 interface User {
@@ -39,26 +42,43 @@ export const test = base.extend<MyFixture>({
     await use(productPage);
   },
 
+  shoppingCartPage: async ({ page }, use) => {
+    const shoppingCartPage = new ShoppingCartPage(page);
+    await use(shoppingCartPage);
+  },
+
   //TODO re-wright with API??
-  beforeFixture: [
-    async ({ loginPage, page }, use) => {
+  loginBeforeTest: [
+    async ({ loginPage, page}, use) => {
       await loginPage.goto();
       await loginPage.performSignIn({ email: user.validEmail, password: user.validPassword });
       await page.waitForLoadState('networkidle');
-
       await use();
     },
-    { auto: true, title: 'Executing before all tests.' },
+    { title: 'Logs in user before test execution.' },
   ],
 
-  //TODO re-wright with API??
-  afterFixture: [
-    async ({ productPage }, use) => {
+  logOutAfterTest: [ // runs after test, clears cookie with name = 'PrestaShop-bd73d297b14c5070734013be8110710b'
+    async ({ homePage, context, page }, use) => {
       await use();
-      await productPage.header.clickSignOutButton();
+
+        const allCookiesWithAuth = await context.cookies();
+        const cookiesWithoutAuth = allCookiesWithAuth.filter((cookie) =>
+            cookie.name !== 'PrestaShop-bd73d297b14c5070734013be8110710b'
+        );
+
+        await context.clearCookies();
+        await context.addCookies(cookiesWithoutAuth);
+
+        await homePage.goto();
+        await page.waitForLoadState('networkidle');
+
+        expect(homePage.header.getSignInButton()).toBeVisible();
+        expect(homePage.header.getCurrentUserButton()).toBeHidden();
     },
-    { auto: true, title: 'Executing after all tests are finished.' },
+    { title: 'Logs out user after test is executed.' },
   ],
+
 
   //can return only token:
   // token: async ({ page }, use) => {
