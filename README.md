@@ -86,7 +86,5 @@ Test lifecycle / maturity
 
 Risk / business-domain tags
 - **@auth**
-
 - **@payment**
-
 - **@checkout**
