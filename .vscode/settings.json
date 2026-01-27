@@ -1,26 +1,63 @@
 {
-  // === Formatting ===
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "editor.formatOnPaste": true,
-  "[typescript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+  // Enable IntelliSense and autocomplete
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
   },
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-
-  // === ESLint ===
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
-
-  // === TypeScript ===
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.acceptSuggestionOnCommitCharacter": true,
+  "editor.acceptSuggestionOnEnter": "on",
+  "editor.tabCompletion": "on",
+  "editor.wordBasedSuggestions": "matchingDocuments",
+  "editor.suggestSelection": "first",
+  "editor.suggest.localityBonus": true,
+  
+  // TypeScript specific settings
+  "typescript.suggest.autoImports": true,
+  "typescript.suggest.completeFunctionCalls": true,
+  "typescript.suggest.completeJSDocs": true,
+  "typescript.suggest.enabled": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
   "typescript.preferences.importModuleSpecifier": "relative",
-
-  // === Files ===
-  "files.eol": "\n",
-  "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true,
-  "cSpell.words": ["incapsulate"],
+  "typescript.inlayHints.parameterNames.enabled": "all",
+  "typescript.inlayHints.variableTypes.enabled": true,
+  "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  
+  // Parameter hints
+  "editor.parameterHints.enabled": true,
+  "editor.parameterHints.cycle": true,
+  
+  // Inline suggestions (AI-powered)
+  "editor.inlineSuggest.enabled": true,
+  
+  // Show hover information
+  "editor.hover.enabled": true,
+  "editor.hover.delay": 300,
+  
+  // Format on save
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  
+  // Code actions on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
+  },
+  
+  // File associations
+  "files.associations": {
+    "*.ts": "typescript"
+  },
+  
+  // Enable semantic highlighting
+  "editor.semanticHighlighting.enabled": true,
+  
+  // Show suggestions after typing
+  "editor.quickSuggestionsDelay": 100,
+  
+  // Enable bracket pair colorization
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": "active"
 }

@@ -1,9 +1,9 @@
 import { test as base, expect } from '@playwright/test';
-import LoginPage from './app/pages/LoginPage/LoginPage';
-import HomePage from './app/pages/HomePage/HomePage';
-import ProductPage from './app/pages/ProductPage/ProductPage';
-import { requireEnv } from './support';
-import ShoppingCartPage from './app/pages/ShoppingCartPage/ShoppingCartPage';
+import LoginPage from '../app/pages/LoginPage/LoginPage';
+import HomePage from '../app/pages/HomePage/HomePage';
+import ProductPage from '../app/pages/ProductPage/ProductPage';
+import { requireEnv } from '../support';
+import ShoppingCartPage from '../app/pages/ShoppingCartPage/ShoppingCartPage';
 
 type MyFixture = {
   loginPage: LoginPage;
@@ -15,16 +15,16 @@ type MyFixture = {
   authCookie: string;
 };
 
-interface User {
-  validEmail: string;
-  validPassword: string;
-}
+// interface User {
+//   validEmail: string;
+//   validPassword: string;
+// }
 
-//TODO after lesson check if done correct (using of .env values) !!!!
-const user: User = {
-  validEmail: requireEnv('EMAIL'),
-  validPassword: requireEnv('PASSWORD'),
-};
+// //TODO after lesson check if done correct (using of .env values) !!!!
+// const user: User = {
+//   validEmail: requireEnv('EMAIL'),
+//   validPassword: requireEnv('PASSWORD'),
+// };
 
 export const test = base.extend<MyFixture>({
   loginPage: async ({ page }, use) => {
@@ -48,22 +48,23 @@ export const test = base.extend<MyFixture>({
   },
 
   //TODO re-wright with API??
-  loginBeforeTest: [
-    async ({ loginPage, page}, use) => {
-      await loginPage.goto();
-      await loginPage.performSignIn({ email: user.validEmail, password: user.validPassword });
-      await page.waitForLoadState('networkidle');
-      await use();
-    },
-    { title: 'Logs in user before test execution.' },
-  ],
+  // loginBeforeTest: [
+  //   async ({ loginPage, page}, use) => {
+  //     await loginPage.goto();
+  //     await loginPage.performSignIn({ email: user.validEmail, password: user.validPassword });
+  //     await page.waitForLoadState('networkidle');
+  //     await use();
+  //   },
+  //   { title: 'Logs in user before test execution.' },
+  // ],
 
   logOutAfterTest: [ // runs after test, clears cookie with name = 'PrestaShop-bd73d297b14c5070734013be8110710b'
     async ({ homePage, context, page }, use) => {
       await use();
 
-        const allCookiesWithAuth = await context.cookies();
-        const cookiesWithoutAuth = allCookiesWithAuth.filter((cookie) =>
+        const allCookies = await context.cookies();
+
+        const cookiesWithoutAuth = allCookies.filter((cookie) =>
             cookie.name !== 'PrestaShop-bd73d297b14c5070734013be8110710b'
         );
 
@@ -78,6 +79,12 @@ export const test = base.extend<MyFixture>({
     },
     { title: 'Logs out user after test is executed.' },
   ],
+
+  storageState: async ({storageState}, use) => {
+    console.log('storageState');
+
+    await use(storageState);
+  }
 
 
   //can return only token:

@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test';
-import { test } from '../fixture';
+import { test } from '../fixtures/fixture';
 import { requireEnv } from '../support';
 
 //TODO after lesson check if done correct (using of .env values) !!!!
@@ -29,7 +29,7 @@ test(
 test(
   '[E2E-002] Should NOT login with invalid credentials',
   { tag: ['@regression', '@auth'] },
-  async ({ page }) => {}
+  async ({ page }) => { }
 );
 
 test(
@@ -43,5 +43,5 @@ test(
 test(
   '[E2E-004] Should NOT login with empty credentials',
   { tag: ['@regression', '@auth'] },
-  async ({ page }) => {}
+  async ({ page }) => { }
 );
