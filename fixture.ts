@@ -1,32 +1,22 @@
-import { test as base, expect } from '@playwright/test';
+import { test as base, Locator } from '@playwright/test';
+import fs from 'fs';
 import LoginPage from './app/pages/LoginPage/LoginPage';
 import HomePage from './app/pages/HomePage/HomePage';
 import ProductPage from './app/pages/ProductPage/ProductPage';
-import { requireEnv } from './support';
 import ShoppingCartPage from './app/pages/ShoppingCartPage/ShoppingCartPage';
+import CheckoutPage from './app/pages/CheckoutPage/CheckoutPage';
 
 type MyFixture = {
   loginPage: LoginPage;
   homePage: HomePage;
   productPage: ProductPage;
   shoppingCartPage: ShoppingCartPage;
-  loginBeforeTest: void;
-  logOutAfterTest: void;
-  authCookie: string;
-};
-
-interface User {
-  validEmail: string;
-  validPassword: string;
-}
-
-//TODO after lesson check if done correct (using of .env values) !!!!
-const user: User = {
-  validEmail: requireEnv('EMAIL'),
-  validPassword: requireEnv('PASSWORD'),
+  checkoutPage: CheckoutPage;
+  userToLogin: {email: string; password: string;};
 };
 
 export const test = base.extend<MyFixture>({
+  //pages
   loginPage: async ({ page }, use) => {
     const loginPage = new LoginPage(page);
     await use(loginPage);
@@ -47,38 +37,69 @@ export const test = base.extend<MyFixture>({
     await use(shoppingCartPage);
   },
 
-  //TODO re-wright with API??
-  loginBeforeTest: [
-    async ({ loginPage, page}, use) => {
-      await loginPage.goto();
-      await loginPage.performSignIn({ email: user.validEmail, password: user.validPassword });
-      await page.waitForLoadState('networkidle');
-      await use();
-    },
-    { title: 'Logs in user before test execution.' },
-  ],
+  checkoutPage: async ({ page }, use) => {
+    const checkoutPage = new CheckoutPage(page);
+    await use(checkoutPage);
+  },
 
-  logOutAfterTest: [ // runs after test, clears cookie with name = 'PrestaShop-bd73d297b14c5070734013be8110710b'
-    async ({ homePage, context, page }, use) => {
-      await use();
+  //auth
 
-        const allCookiesWithAuth = await context.cookies();
-        const cookiesWithoutAuth = allCookiesWithAuth.filter((cookie) =>
-            cookie.name !== 'PrestaShop-bd73d297b14c5070734013be8110710b'
-        );
+  userToLogin: undefined,
 
-        await context.clearCookies();
-        await context.addCookies(cookiesWithoutAuth);
+  storageState: async ({ browser, userToLogin }, use) => {
+    if (userToLogin) {
+      const filename = `.auth/${userToLogin}.json` as string;
 
-        await homePage.goto();
+      if (!fs.existsSync(filename)) {
+        const page = await browser.newPage({ storageState: undefined });
+        await page.goto('?controller=authentication');
+        const emailInput: Locator = page.getByRole('textbox', { name: 'Email' });
+        const passwordInput = page.getByRole('textbox', { name: 'Password input' });
+        const signInButton = page.getByRole('button', { name: 'Sign in' });
+
+        await emailInput.fill(userToLogin.email);
+        await passwordInput.fill(userToLogin.password);
+        await signInButton.click();
+
         await page.waitForLoadState('networkidle');
+        await page.context().storageState({ path: filename });
+        await page.close();
+      }
+      await use(filename);
+    }
+  },
 
-        expect(homePage.header.getSignInButton()).toBeVisible();
-        expect(homePage.header.getCurrentUserButton()).toBeHidden();
-    },
-    { title: 'Logs out user after test is executed.' },
-  ],
+  //TODO re-wright with API??
+  // loginBeforeTest: [
+  //   async ({ loginPage, page}, use) => {
+  //     await loginPage.goto();
+  //     await loginPage.performSignIn({ email: user.validEmail, password: user.validPassword });
+  //     await page.waitForLoadState('networkidle');
+  //     await use();
+  //   },
+  //   { title: 'Logs in user before test execution.' },
+  // ],
 
+  // logOutAfterTest: [ // runs after test, clears cookie with name = 'PrestaShop-bd73d297b14c5070734013be8110710b'
+  //   async ({ homePage, context, page }, use) => {
+  //     await use();
+
+  //       const allCookiesWithAuth = await context.cookies();
+  //       const cookiesWithoutAuth = allCookiesWithAuth.filter((cookie) =>
+  //           cookie.name !== 'PrestaShop-bd73d297b14c5070734013be8110710b'
+  //       );
+
+  //       await context.clearCookies();
+  //       await context.addCookies(cookiesWithoutAuth);
+
+  //       await homePage.goto();
+  //       await page.waitForLoadState('networkidle');
+
+  //       expect(homePage.header.getSignInButton()).toBeVisible();
+  //       expect(homePage.header.getCurrentUserButton()).toBeHidden();
+  //   },
+  //   { title: 'Logs out user after test is executed.' },
+  // ],
 
   //can return only token:
   // token: async ({ page }, use) => {
