@@ -1,7 +1,7 @@
 import { Locator } from "@playwright/test";
 import BaseLocators from "../../pages/Base/BaseLocators";
 
-export default class CheckoutPersonalInformationComponentLocators extends BaseLocators {
+export default class PersonalInformationComponentLocators extends BaseLocators {
 
     readonly firstNameInput: Locator = this.baseLocator.getByRole('textbox', { name: 'First name' });
     readonly lastNameInput: Locator = this.baseLocator.getByRole('textbox', { name: 'Last name' });
@@ -13,4 +13,8 @@ export default class CheckoutPersonalInformationComponentLocators extends BaseLo
     readonly offerCheckbox: Locator = this.baseLocator.getByText('Receive offers from our');
     readonly termsCheckbox: Locator = this.baseLocator.getByText('I agree to the terms and');
     readonly newsLetterCheckbox: Locator = this.baseLocator.getByText('Sign up for our');
+
+    readonly loggedUserName: Locator = this.baseLocator.locator('.identity');
+
+    readonly continueButton: Locator = this.baseLocator.getByRole('button', { name: 'Continue' });
 }

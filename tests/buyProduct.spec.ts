@@ -56,7 +56,22 @@ test.describe('Buy Product', () => {
 
     await shoppingCartPage.clickProceedToCheckoutButton();
 
-    await checkoutPage.
+    await checkoutPage.addressesSection.fillOnlyRequiredFields({
+      firstName: 'John',
+      lastName: 'Doe',
+      address: '123 Main Street',
+      city: 'New York',
+      state: 'NY',
+      zipPostalCode: '10001',
+      country: 'United States',
+    });
+
+    await checkoutPage.addressesSection.clickCheckbox();
+    await checkoutPage.addressesSection.clickContinueButton();
+
+    await checkoutPage.shippingMethodSection.checkCheckboxByTitle('Click and collect');
+    await checkoutPage.shippingMethodSection.clickContinueButton();
+
   });
 
   test('[E2E-003] Should delete product from cart', async ({ page }) => {});
