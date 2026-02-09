@@ -10,6 +10,10 @@ export default abstract class BasePage {
     this.header = new HeaderComponent(this.page.locator("#header"));
   }
 
+  async navigateTo(url: string = '/') : Promise<void> {
+    await this.page.goto(url);
+  }
+
   //can be methods
   //wait until page loaded
   //reload

@@ -33,7 +33,7 @@ export default class AddressesSectionComponentLocators extends BaseLocators {
 
   readonly phoneInputOptional: Locator = this.baseLocator.getByRole('textbox', { name: 'Phone' });
 
-  readonly checkbox: Locator = this.baseLocator.getByText('Use this address for invoice');
+  readonly checkbox: Locator = this.baseLocator.locator('input[type="radio"]');
 
   //TODO this button exist on every section -> move to parent component
   readonly continueButton: Locator = this.baseLocator.getByRole('button', { name: 'Continue' });

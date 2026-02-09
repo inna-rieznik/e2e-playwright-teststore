@@ -25,6 +25,6 @@ export default class ShippingMethodSectionComponent extends BaseComponent {
   // Click and collect
   // My carrier
   async checkCheckboxByTitle(title: DeliveryTitle) {
-    await this.getCheckboxByTitle(title).click();
+    await this.getCheckboxByTitle(title).check();
   }
 }

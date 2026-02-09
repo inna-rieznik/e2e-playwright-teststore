@@ -1,6 +1,7 @@
 import { Locator } from '@playwright/test';
 import BaseComponent from '../Base/BaseComponent';
 import AddressesSectionComponentLocators from './AddressesSectionComponentLocators';
+import { OptionalAddressInputs, RequiredAddressInputs } from '../../../types/checkoutTypes';
 
 export default class AddressesSectionComponent extends BaseComponent {
   readonly locators: AddressesSectionComponentLocators = new AddressesSectionComponentLocators(
@@ -11,55 +12,56 @@ export default class AddressesSectionComponent extends BaseComponent {
     super(locator);
   }
 
-  private async fillFirstNameInput(firstName: string) {
+  //TODO re wrigth all this methods under one function that will accept locator and value, then using for in loop fill inputs based on data
+  private async fillFirstNameInput(firstName: string): Promise<void> {
     await this.locators.firstNameInput.fill(firstName);
   }
 
-  private async fillLastNameInput(lastName: string) {
+  private async fillLastNameInput(lastName: string): Promise<void> {
     await this.locators.lastNameInput.fill(lastName);
   }
 
-  private async fillAddressInput(address: string) {
+  private async fillAddressInput(address: string): Promise<void> {
     await this.locators.addressInput.fill(address);
   }
 
-  private async fillCityInput(city: string) {
+  private async fillCityInput(city: string): Promise<void> {
     await this.locators.cityInput.fill(city);
   }
 
-  private async fillStateInput(state: string) {
+  private async fillStateInput(state: string): Promise<void> {
     await this.locators.stateInput.selectOption(state);
   }
 
-  private async fillZipPostalCodeInput(zipPostalCode: string) {
+  private async fillZipPostalCodeInput(zipPostalCode: string): Promise<void> {
     await this.locators.zipPostalCodeInput.fill(zipPostalCode);
   }
 
-  private async fillCountryInput(country: string) {
+  private async fillCountryInput(country: string): Promise<void> {
     await this.locators.countryInput.selectOption(country);
   }
 
-  private async fillAliasInput(alias: string) {
+  private async fillAliasInput(alias: string): Promise<void> {
     await this.locators.aliasInputOptional.fill(alias);
   }
 
-  private async fillCompanyInput(company: string) {
+  private async fillCompanyInput(company: string): Promise<void> {
     await this.locators.companyInputOptional.fill(company);
   }
 
-  private async fillAddressComplementInput(addressComplement: string) {
+  private async fillAddressComplementInput(addressComplement: string): Promise<void> {
     await this.locators.addressComplementInputOptional.fill(addressComplement);
   }
 
-  private async fillPhoneInput(phone: string) {
+  private async fillPhoneInput(phone: string): Promise<void> {
     await this.locators.phoneInputOptional.fill(phone);
   }
 
-  async clickCheckbox() {
-    await this.locators.checkbox.click();
+  async checkCheckbox(): Promise<void> {
+    await this.locators.checkbox.check();
   }
 
-  async clickContinueButton() {
+  async clickContinueButton(): Promise<void> {
     await this.locators.continueButton.click();
   }
 
@@ -71,15 +73,7 @@ export default class AddressesSectionComponent extends BaseComponent {
     state,
     zipPostalCode,
     country,
-  }: {
-    firstName: string;
-    lastName: string;
-    address: string;
-    city: string;
-    state: string;
-    zipPostalCode: string;
-    country: string;
-  }) {
+  }: RequiredAddressInputs): Promise<void> {
     await this.fillFirstNameInput(firstName);
     await this.fillLastNameInput(lastName);
     await this.fillAddressInput(address);
@@ -94,12 +88,7 @@ export default class AddressesSectionComponent extends BaseComponent {
     company,
     addressComplement,
     phone,
-  }: {
-    alias?: string;
-    company?: string;
-    addressComplement?: string;
-    phone?: string;
-  }) {
+  }: OptionalAddressInputs): Promise<void> {
     if (alias) await this.fillAliasInput(alias);
     if (company) await this.fillCompanyInput(company);
     if (addressComplement) await this.fillAddressComplementInput(addressComplement);

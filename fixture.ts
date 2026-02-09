@@ -1,4 +1,4 @@
-import { test as base, Locator } from '@playwright/test';
+import { APIResponse, test as base, expect } from '@playwright/test';
 import fs from 'fs';
 import LoginPage from './app/pages/LoginPage/LoginPage';
 import HomePage from './app/pages/HomePage/HomePage';
@@ -12,7 +12,8 @@ type MyFixture = {
   productPage: ProductPage;
   shoppingCartPage: ShoppingCartPage;
   checkoutPage: CheckoutPage;
-  userToLogin: {email: string; password: string;};
+  userToLogin: { email: string; password: string };
+  logOutAfterTest: void;
 };
 
 export const test = base.extend<MyFixture>({
@@ -46,22 +47,33 @@ export const test = base.extend<MyFixture>({
 
   userToLogin: undefined,
 
-  storageState: async ({ browser, userToLogin }, use) => {
+  storageState: async ({ browser, userToLogin, request }, use) => {
     if (userToLogin) {
-      const filename = `.auth/${userToLogin}.json` as string;
+      const filename = `.auth/${userToLogin.email}.json` as string;
 
       if (!fs.existsSync(filename)) {
         const page = await browser.newPage({ storageState: undefined });
-        await page.goto('?controller=authentication');
-        const emailInput: Locator = page.getByRole('textbox', { name: 'Email' });
-        const passwordInput = page.getByRole('textbox', { name: 'Password input' });
-        const signInButton = page.getByRole('button', { name: 'Sign in' });
 
-        await emailInput.fill(userToLogin.email);
-        await passwordInput.fill(userToLogin.password);
-        await signInButton.click();
+        const response: APIResponse = await request.post(
+          `https://teststore.automationtesting.co.uk/index.php?controller=authentication?back=https%3A%2F%2Fteststore.automationtesting.co.uk%2Findex.php`,
+          {
+            form: {
+              email: userToLogin.email,
+              password: userToLogin.password,
+              submitLogin: '1',
+            },
+          }
+        );
 
-        await page.waitForLoadState('networkidle');
+        const responseStatus = response.status();
+        expect(responseStatus).toBe(200);
+
+        console.log('User logged in via API, saving storage state...');
+        const apiState = await request.storageState();
+        if (apiState.cookies && apiState.cookies.length) {
+          await page.context().addCookies(apiState.cookies);
+        }
+
         await page.context().storageState({ path: filename });
         await page.close();
       }
@@ -80,34 +92,25 @@ export const test = base.extend<MyFixture>({
   //   { title: 'Logs in user before test execution.' },
   // ],
 
-  // logOutAfterTest: [ // runs after test, clears cookie with name = 'PrestaShop-bd73d297b14c5070734013be8110710b'
-  //   async ({ homePage, context, page }, use) => {
-  //     await use();
+  logOutAfterTest: [
+    // runs after test, clears cookie with name = 'PrestaShop-bd73d297b14c5070734013be8110710b'
+    async ({ homePage, context, page }, use) => {
+      await use();
 
-  //       const allCookiesWithAuth = await context.cookies();
-  //       const cookiesWithoutAuth = allCookiesWithAuth.filter((cookie) =>
-  //           cookie.name !== 'PrestaShop-bd73d297b14c5070734013be8110710b'
-  //       );
+      const allCookiesWithAuth = await context.cookies();
+      const cookiesWithoutAuth = allCookiesWithAuth.filter(
+        cookie => cookie.name !== 'PrestaShop-bd73d297b14c5070734013be8110710b'
+      );
 
-  //       await context.clearCookies();
-  //       await context.addCookies(cookiesWithoutAuth);
+      await context.clearCookies();
+      await context.addCookies(cookiesWithoutAuth);
 
-  //       await homePage.goto();
-  //       await page.waitForLoadState('networkidle');
+      await homePage.navigateTo();
+      await page.waitForLoadState('networkidle');
 
-  //       expect(homePage.header.getSignInButton()).toBeVisible();
-  //       expect(homePage.header.getCurrentUserButton()).toBeHidden();
-  //   },
-  //   { title: 'Logs out user after test is executed.' },
-  // ],
-
-  //can return only token:
-  // token: async ({ page }, use) => {
-  //   const info = { //data that i can get from the response
-  //     access_token: 'ssddf',
-  //     refresh_token: 'ssdvsfvfvfsvdf',
-  //     expiration: '900',
-  //   };
-  //   await use(info.access_token);
-  // },
+      expect(homePage.header.getSignInButton()).toBeVisible();
+      expect(homePage.header.getCurrentUserButton()).toBeHidden();
+    },
+    { title: 'Logs out user after test is executed.' },
+  ],
 });

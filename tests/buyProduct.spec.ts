@@ -13,7 +13,7 @@ test.describe('Buy Product', () => {
       productItemTitle: 'The adventure begins Framed...',
     };
 
-    await homePage.goto();
+    await homePage.navigateTo();
     await homePage.getProductItem(constants.productItemTitle).clickProductTitleRow();
 
     await productPage.productContainer.setQuantity(constants.productCount);
@@ -30,6 +30,7 @@ test.describe('Buy Product', () => {
   });
 
   test.use({ userToLogin: { email: requireEnv('EMAIL'), password: requireEnv('PASSWORD') } });
+  
   test('[E2E-002] Should add 2 popular products to a cart', async ({
     homePage,
     productPage,
@@ -42,11 +43,11 @@ test.describe('Buy Product', () => {
       productItemTitle: 'The adventure begins Framed...',
     };
 
-    await homePage.goto();
+    await homePage.navigateTo();
     await homePage.getProductItem(constants.productItemTitle).clickProductTitleRow();
     await productPage.productContainer.setQuantity(constants.productCount);
     await productPage.productContainer.clickAddToCartButton();
-    await page.waitForTimeout(10000); //TODO replace with waitForResponse
+    await page.waitForTimeout(1000); //TODO replace with waitForResponse
 
     //TODO check quantity that was added is the same and price is the same ??
     await productPage.productAddedToCartModal.clickProceedToCheckoutButton();
@@ -56,17 +57,19 @@ test.describe('Buy Product', () => {
 
     await shoppingCartPage.clickProceedToCheckoutButton();
 
-    await checkoutPage.addressesSection.fillOnlyRequiredFields({
-      firstName: 'John',
-      lastName: 'Doe',
-      address: '123 Main Street',
-      city: 'New York',
-      state: 'NY',
-      zipPostalCode: '10001',
-      country: 'United States',
-    });
+    //can be divided into 2 tests, from that part start a new test: 
+    // via api objects are added, starting from checkout page
+    // await checkoutPage.addressesSection.fillOnlyRequiredFields({
+    //   firstName: 'John',
+    //   lastName: 'Doe',
+    //   address: '123 Main Street',
+    //   city: 'New York',
+    //   state: 'NY',
+    //   zipPostalCode: '10001',
+    //   country: 'United States',
+    // });
 
-    await checkoutPage.addressesSection.clickCheckbox();
+    await checkoutPage.addressesSection.checkCheckbox();
     await checkoutPage.addressesSection.clickContinueButton();
 
     await checkoutPage.shippingMethodSection.checkCheckboxByTitle('Click and collect');

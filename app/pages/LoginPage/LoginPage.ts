@@ -4,8 +4,8 @@ import LoginPageLocators from './LoginPageLocators';
 export default class LoginPage extends BasePage {
   readonly locators: LoginPageLocators = new LoginPageLocators(this.page.locator('body'));
 
-  async goto() {
-    await this.page.goto('?controller=authentication');
+  async navigateTo() {
+    await super.navigateTo('?controller=authentication');
   }
 
   async fillEmail(email: string) {
