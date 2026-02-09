@@ -9,7 +9,7 @@ interface UserToCreate {
   birthday?: string;
 }
 
-const userToCreate = {
+const userToCreate : UserToCreate = {
   gender: 2,
   firstName: 'Harry',
   lastName: 'Potter',
