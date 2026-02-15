@@ -3,7 +3,7 @@ import ProductContainerComponent from '../../components/ProductContainerComponen
 import BasePage from '../Base/BasePage';
 import ProductAddedToCartModalComponent from '../../components/ProductAddedToCartModalComponent.ts/ProductAddedToCartModalComponent';
 
-export default class ProductPage extends BasePage {
+export default class ProductDetailsPage extends BasePage {
   readonly productContainer: ProductContainerComponent;
   readonly productAddedToCartModal: ProductAddedToCartModalComponent;
 

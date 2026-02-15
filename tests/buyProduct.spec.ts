@@ -47,7 +47,7 @@ test.describe('Buy Product', () => {
     await homePage.getProductItem(constants.productItemTitle).clickProductTitleRow();
     await productPage.productContainer.setQuantity(constants.productCount);
     await productPage.productContainer.clickAddToCartButton();
-    await page.waitForTimeout(1000); //TODO replace with waitForResponse
+    //await page.waitForTimeout(1000); //TODO replace with waitForResponse
 
     //TODO check quantity that was added is the same and price is the same ??
     await productPage.productAddedToCartModal.clickProceedToCheckoutButton();
