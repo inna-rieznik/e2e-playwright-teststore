@@ -1,0 +1,34 @@
+---
+description: Reusable component and locators pattern
+globs: app/components/**/*.ts
+alwaysApply: false
+---
+
+# Component Conventions
+
+## Components
+
+- Components extend `BaseComponent` and receive a `Locator` (their root element) in the constructor.
+- Each component has a matching `*Locators.ts` class in the same folder; component holds `readonly locators: ComponentNameLocators`.
+- Implement actions as methods (e.g. `clickContinueButton()`, `fillOnlyRequiredFields(data)`); use `this.locators.*` inside, not raw selectors.
+- Prefer `async` methods that perform actions; keep sync getters only for simple state (e.g. `getCartProductsCount()` returning a locator for assertions).
+
+## Locators
+
+- Component locators extend `BaseLocators` and scope all selectors under `this.baseLocator`.
+- Use semantic selectors: `getByRole()`, `getByLabel()`, `getByText()`; use `locator()` only when necessary.
+- Define all locators as `readonly`; no logic in locators classes.
+
+```typescript
+// ✅ GOOD — component with locators
+export default class ProductItem extends BaseComponent {
+  readonly locators = new ProductItemLocators(this.baseLocator);
+  async clickProductTitleRow(): Promise<void> {
+    await this.locators.productTitleRow.click();
+  }
+}
+```
+
+## Reuse
+
+- Pages compose components by passing a scoped locator (e.g. `this.page.locator('#header')`) into the component constructor.

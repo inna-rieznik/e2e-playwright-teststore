@@ -1,20 +1,23 @@
 import { Page } from "@playwright/test";
-import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
+import Header from "../../components/Header/Header";
 
 export default abstract class BasePage {
   readonly page: Page;
-  readonly header: HeaderComponent;
+  readonly header: Header;
 
   constructor(page: Page) {
     this.page = page;
-    this.header = new HeaderComponent(this.page.locator("#header"));
+    this.header = new Header(this.page.locator("#header"));
   }
 
-  async navigateTo(url: string = '/') : Promise<void> {
+  async navigateTo(url: string = '/'): Promise<void> {
     await this.page.goto(url);
   }
 
+  async waitForNetworkIdle(): Promise<void> {
+    await this.page.waitForLoadState('networkidle');
+  }
+
   //can be methods
-  //wait until page loaded
   //reload
 }

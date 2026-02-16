@@ -7,4 +7,20 @@ export default class ShoppingCartPage extends BasePage {
     async clickProceedToCheckoutButton() {
         await this.locators.proceedToCheckoutButton.click();
     }
+
+    async getTotalPriceTaxIncluded(): Promise<string> {
+        return (await this.locators.totalPriceTaxIncluded.textContent()) ?? '';
+    }
+
+    async getTotalPriceTaxExcluded(): Promise<string> {
+        return (await this.locators.totalPriceTaxExcluded.textContent()) ?? '';
+    }
+
+    async getShippingPrice(): Promise<string> {
+        return (await this.locators.shippingPrice.textContent()) ?? '';
+    }
+
+    async getCountOfProducts(): Promise<string> {
+        return (await this.locators.countOfProducts.textContent()) ?? '';
+    }
 }

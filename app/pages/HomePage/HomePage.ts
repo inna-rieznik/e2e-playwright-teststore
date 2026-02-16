@@ -1,16 +1,17 @@
-import ProductItemComponent from '../../components/ProductItemComponent/ProductItemComponent';
+
+import ProductItem from '../../components/ProductItem/ProductItem';
 import BasePage from '../Base/BasePage';
 
 export default class HomePage extends BasePage {
   private getBaseProductItemLocator = (productName: string) =>
     `//h3[contains(@class, "product-title")]//a[normalize-space(text())="${productName}"]/ancestor::article[contains(@class, "product-miniature")]`;
 
-   async navigateTo() {
+  async navigateTo() {
     await super.navigateTo('/');
   }
 
   getProductItem(productName: string) {
-    const item = new ProductItemComponent(
+    const item = new ProductItem(
       this.page.locator(this.getBaseProductItemLocator(productName))
     );
     return item;

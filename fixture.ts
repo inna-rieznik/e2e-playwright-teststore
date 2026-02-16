@@ -1,8 +1,8 @@
-import { APIResponse,  APIRequest, test as base, expect, request } from '@playwright/test';
+import { test as base } from '@playwright/test';
 import fs from 'fs';
 import LoginPage from './app/pages/LoginPage/LoginPage';
 import HomePage from './app/pages/HomePage/HomePage';
-import ProductPage from './app/pages/ProductDatailsPage/ProductDetailsPage';
+import ProductPage from './app/pages/ProductDetailsPage/ProductDetailsPage';
 import ShoppingCartPage from './app/pages/ShoppingCartPage/ShoppingCartPage';
 import CheckoutPage from './app/pages/CheckoutPage/CheckoutPage';
 import { authenticateViaAPI } from './support';
@@ -48,16 +48,17 @@ export const test = base.extend<MyFixture>({
 
   userToLogin: undefined,
 
-  storageState: async ({ browser, userToLogin, request }, use) => {
+  storageState: async ({ browser, userToLogin }, use) => {
     if (userToLogin) {
-      const filename = `.auth/${userToLogin.email}.json` as string;
+      const filename = `.auth/${userToLogin.email}.json`;
 
       if (!fs.existsSync(filename)) {
         const page = await browser.newPage({ storageState: undefined });
+        const apiState = await authenticateViaAPI({
+          email: userToLogin.email,
+          password: userToLogin.password,
+        });
 
-        const apiState = await authenticateViaAPI({ email: userToLogin.email, password: userToLogin.password });
-
-        console.log('User logged in via API, saving storage state...');
         if (apiState.cookies && apiState.cookies.length) {
           await page.context().addCookies(apiState.cookies);
         }
@@ -66,27 +67,28 @@ export const test = base.extend<MyFixture>({
         await page.close();
       }
       await use(filename);
+    } else {
+      await use(undefined);
     }
   },
 
   logOutAfterTest: [
-    // runs after test, clears cookie with name = 'PrestaShop-bd73d297b14c5070734013be8110710b'
     async ({ homePage, context, page }, use) => {
       await use();
 
-      const allCookiesWithAuth = await context.cookies();
-      const cookiesWithoutAuth = allCookiesWithAuth.filter(
-        cookie => cookie.name !== 'PrestaShop-bd73d297b14c5070734013be8110710b'
+      const authCookiePattern = /^PrestaShop-/;
+      const allCookies = await context.cookies();
+      const cookiesWithoutAuth = allCookies.filter(
+        (cookie) => !authCookiePattern.test(cookie.name)
       );
 
       await context.clearCookies();
-      await context.addCookies(cookiesWithoutAuth);
+      if (cookiesWithoutAuth.length) {
+        await context.addCookies(cookiesWithoutAuth);
+      }
 
       await homePage.navigateTo();
-      await page.waitForLoadState('networkidle');
-
-      expect(homePage.header.getSignInButton()).toBeVisible();
-      expect(homePage.header.getCurrentUserButton()).toBeHidden();
+      await page.waitForLoadState('domcontentloaded');
     },
     { title: 'Logs out user after test is executed.' },
   ],

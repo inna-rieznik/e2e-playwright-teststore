@@ -13,8 +13,8 @@ export function requireEnv(name: string): string {
 
 export async function authenticateViaAPI({ email, password }: { email: string; password: string }) {
   const context = await request.newContext();
-  
-  await  context.post(
+
+  await context.post(
     `https://teststore.automationtesting.co.uk/index.php?controller=authentication?back=https%3A%2F%2Fteststore.automationtesting.co.uk%2Findex.php`,
     {
       form: {

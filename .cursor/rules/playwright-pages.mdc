@@ -1,0 +1,33 @@
+---
+description: Page Object Model — pages and locators
+globs: app/pages/**/*.ts
+alwaysApply: false
+---
+
+# Page Object Model
+
+## Pages
+
+- Concrete pages extend `BasePage` and receive `Page` in the constructor.
+- Delegate shared UI (e.g. header) to components; instantiate them in the page (e.g. `readonly header: Header`).
+- Navigation: use `navigateTo(url?)` (or override) and `baseURL`; avoid hardcoding full URLs in pages.
+- Expose high-level actions and getters (e.g. `clickProceedToCheckoutButton()`, `getProductItem(title)`); keep locator details in the locators class.
+
+## Locators
+
+- Each page has a matching locators class (e.g. `ShoppingCartPageLocators`) in the same folder.
+- Page locators extend `BaseLocators` and take a `baseLocator: Locator` (usually the page container or `page`).
+- Define locators as `readonly` properties; use `getByRole()`, `getByLabel()`, `getByText()` before `locator()`.
+- Page class holds an instance of its locators class and uses it for interactions, not inline `this.page.locator()`.
+
+```typescript
+// ✅ GOOD — page uses locators class
+readonly locators = new ShoppingCartPageLocators(this.page);
+async clickProceedToCheckoutButton(): Promise<void> {
+  await this.locators.proceedToCheckoutButton.click();
+}
+```
+
+## Exports
+
+- Export one default class per file (page or locators); use default export for the page used in fixture.

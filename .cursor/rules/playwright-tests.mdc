@@ -1,0 +1,38 @@
+---
+description: Playwright test structure, assertions, and best practices
+globs: tests/**/*.spec.ts
+alwaysApply: false
+---
+
+# Test File Conventions
+
+## Structure
+
+- Use `test.describe('Feature or flow name')` to group tests.
+- Use descriptive test titles; include ticket/ID if used (e.g. `[E2E-002] Should add products to cart`).
+- Rely on fixtures for page objects and auth; avoid `new PageClass(page)` inside tests.
+
+```typescript
+// ✅ GOOD — use fixtures
+test('Should add product to cart', async ({ homePage, productPage, shoppingCartPage }) => {
+  await homePage.navigateTo();
+  await homePage.getProductItem('Some product').clickProductTitleRow();
+  await productPage.productContainer.clickAddToCartButton();
+  await shoppingCartPage.clickProceedToCheckoutButton();
+});
+
+// ❌ BAD — constructing pages in test
+test('...', async ({ page }) => {
+  const homePage = new HomePage(page);
+});
+```
+
+## Assertions & Waits
+
+- Use `expect()` from `@playwright/test`; prefer `expect(locator).toHaveText()`, `toBeVisible()`, `toHaveCount()` over manual checks.
+- Avoid `page.waitForTimeout()`; use `expect(locator).toBeVisible()` or `waitForLoadState()` when needed.
+- For API calls use `request` fixture and assert status/body; use `failOnStatusCode: true` or explicit status checks.
+
+## Environment & Secrets
+
+- Use helpers like `requireEnv('VAR')` for required env vars; never commit secrets or hardcode credentials in spec files.

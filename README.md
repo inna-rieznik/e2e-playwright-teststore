@@ -95,13 +95,14 @@ npx playwright show-report
 │   ├── components/          # Reusable component classes
 │   │   ├── Base/
 │   │   │   └── BaseComponent.ts
-│   │   ├── CheckoutAddressesComponent/
-│   │   ├── CheckoutPersonalInformationComponent/
-│   │   ├── HeaderComponent/
-│   │   ├── ProductAddedToCartModalComponent.ts/
-│   │   ├── ProductContainerComponent/
-│   │   ├── ProductItemComponent/
-│   │   └── ProductLineShoppingCart/
+│   │   ├── AddToCartModal/
+│   │   ├── AddressSection/
+│   │   ├── CartLineItem/
+│   │   ├── Header/
+│   │   ├── PersonalInfoSection/
+│   │   ├── ProductContainer/
+│   │   ├── ProductItem/
+│   │   └── ShippingSection/
 │   └── pages/               # Page classes
 │       ├── Base/
 │       │   ├── BasePage.ts
@@ -115,10 +116,11 @@ npx playwright show-report
 │       └── SignInPage/
 ├── api/                     # API testing utilities
 ├── tests/                   # Test specifications
-│   ├── buyProduct.spec.ts
+│   ├── buy-product.spec.ts
+│   ├── create-user.spec.ts
+│   ├── filter-products.spec.ts
 │   ├── login.spec.ts
-│   ├── search.spec.ts
-│   └── searchProduct.spec.ts
+│   └── search-product.spec.ts
 ├── fixture.ts               # Custom Playwright fixtures
 ├── support.ts               # Utility functions
 ├── playwright.config.ts     # Playwright configuration
