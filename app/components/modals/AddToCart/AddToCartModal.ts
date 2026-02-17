@@ -1,6 +1,6 @@
 import { Locator } from "@playwright/test";
 import AddToCartModalLocators from "./AddToCartModalLocators";
-import BaseComponent from "../Base/BaseComponent";
+import BaseComponent from "../../Base/BaseComponent";
 
 export default class AddToCartModal extends BaseComponent {
     readonly locators: AddToCartModalLocators =

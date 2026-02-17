@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test';
 import ProductContainer from '../../components/ProductContainer/ProductContainer';
 import BasePage from '../Base/BasePage';
-import AddToCartModal from '../../components/AddToCartModal/AddToCartModal';
+import AddToCartModal from '../../components/modals/AddToCart/AddToCartModal';
 
 export default class ProductDetailsPage extends BasePage {
   readonly productContainer: ProductContainer;

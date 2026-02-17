@@ -1,5 +1,5 @@
 import { Locator } from "@playwright/test";
-import BaseLocators from "../../pages/Base/BaseLocators";
+import BaseLocators from "../../../pages/Base/BaseLocators";
 
 export default class AddToCartModalLocators extends BaseLocators {
 
