@@ -1,7 +1,7 @@
 import { Locator } from '@playwright/test';
 import BaseComponent from '../Base/BaseComponent';
 import AddressSectionLocators from './AddressSectionLocators';
-import { OptionalAddressInputs, RequiredAddressInputs } from '../../../types/checkoutTypes';
+import { OptionalAddressInputs, RequiredAddressInputs } from '../../../types/productTypes';
 
 export default class AddressSection extends BaseComponent {
   readonly locators: AddressSectionLocators = new AddressSectionLocators(

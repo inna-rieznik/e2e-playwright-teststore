@@ -7,7 +7,8 @@ import ProductPage from './app/pages/ProductDetailsPage/ProductDetailsPage';
 import ShoppingCartPage from './app/pages/ShoppingCartPage/ShoppingCartPage';
 import CheckoutPage from './app/pages/CheckoutPage/CheckoutPage';
 import { authenticateViaAPI } from './support';
-import { ProductQuantity } from './types/checkoutTypes';
+import { ProductQuantity } from './types/productTypes';
+import AccessoriesPage from './app/pages/AccessoriesPage/AccessoriesPage';
 
 type MyFixture = {
   loginPage: LoginPage;
@@ -15,6 +16,7 @@ type MyFixture = {
   productPage: ProductPage;
   shoppingCartPage: ShoppingCartPage;
   checkoutPage: CheckoutPage;
+  accessoriesPage: AccessoriesPage;
   addProductToTheCart: (payload: ProductQuantity) => Promise<APIResponse>;
   userToLogin: { email: string; password: string };
   logOutAfterTest: void;
@@ -47,6 +49,13 @@ export const test = base.extend<MyFixture>({
     await use(checkoutPage);
   },
 
+  accessoriesPage: async ({ page }, use) => {
+    const accessoriesPage = new AccessoriesPage(page);
+    await use(accessoriesPage);
+  },
+
+
+  //api
   addProductToTheCart: async ({ page }, use) => {
     const request = page.context().request;
     const addProductToTheCart = async ({
@@ -75,6 +84,7 @@ export const test = base.extend<MyFixture>({
 
   userToLogin: undefined,
 
+  //auth
   storageState: async ({ browser, userToLogin }, use) => {
     if (userToLogin) {
       const filename = `.auth/${userToLogin.email}.json`;
@@ -97,26 +107,5 @@ export const test = base.extend<MyFixture>({
     } else {
       await use(undefined);
     }
-  },
-
-  // logOutAfterTest: [
-  //   async ({ homePage, context, page }, use) => {
-  //     await use();
-
-  //     const authCookiePattern = /^PrestaShop-/;
-  //     const allCookies = await context.cookies();
-  //     const cookiesWithoutAuth = allCookies.filter(
-  //       (cookie) => !authCookiePattern.test(cookie.name)
-  //     );
-
-  //     await context.clearCookies();
-  //     if (cookiesWithoutAuth.length) {
-  //       await context.addCookies(cookiesWithoutAuth);
-  //     }
-
-  //     await homePage.navigateTo();
-  //     await page.waitForLoadState('domcontentloaded');
-  //   },
-  //   { title: 'Logs out user after test is executed.' },
-  // ],
+  }
 });

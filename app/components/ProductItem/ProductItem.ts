@@ -17,5 +17,4 @@ export default class ProductItem extends BaseComponent {
   async clickProductTitleRow() {
     await this.locators.productTitleRow.click();
   }
-
 }
