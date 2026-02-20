@@ -29,7 +29,7 @@ export default class ProductCartItem extends BaseComponent {
     return price ?? '';
   }
 
-  
+
 
 
 
@@ -37,11 +37,15 @@ export default class ProductCartItem extends BaseComponent {
   //get discount
 
 
-  async clickIncrementQuantity() {
-    await this.locators.quantityIncrementButton.click();
+  async clickIncrementQuantity(numberOfClicks: number) {
+    for (let i = 0; i < numberOfClicks; i++) {
+      await this.locators.quantityIncrementButton.click();
+    }
   }
 
-  async clickDecrementQuantity() {
-    await this.locators.quantityDecrementButton.click();
+  async clickDecrementQuantity(numberOfClicks: number) {
+    for (let i = 0; i < numberOfClicks; i++) {
+      await this.locators.quantityDecrementButton.click();
+    }
   }
 }

@@ -15,19 +15,20 @@ test.describe('Buy Product', () => {
     shoppingCartPage,
   }) => {
     const expectedShippingPrice = 'Free';
-    const product = products[0];
-    const expectedTotalPrice = (product.price * (1 - product.discount / 100)) * product.count;
-    const expectedTotalProductCount = product.count;
+    const count = 3;
+    const product = products.hummingbirdTshirt;
+    const expectedTotalPrice = (product.price * (1 - product.discount / 100)) * count;
+
 
     await homePage.navigateTo();
-    await homePage.getProductItem(products[0].title).clickProductTitleRow();
+    await homePage.getProductItem(product.title).clickProductTitleRow();
 
-    await productPage.productContainer.setQuantity(products[0].count.toString());
+    await productPage.productContainer.setQuantity(count.toString());
     await productPage.productContainer.clickAddToCartButton();
     await productPage.addToCartModal.clickProceedToCheckoutButton();
 
     const actualProductsCountInACart = productPage.header.getCartProductsCount().textContent();
-    expect(await actualProductsCountInACart).toContain(expectedTotalProductCount.toString());
+    expect(await actualProductsCountInACart).toContain(count.toString());
 
     const actualTotalPriceTaxExcluded = await shoppingCartPage.getTotalPriceTaxExcluded();
     expect(actualTotalPriceTaxExcluded).toContain(expectedTotalPrice.toString());
@@ -37,9 +38,10 @@ test.describe('Buy Product', () => {
   });
 
 
-  test('[E2E-004] Should add product to favorites from homePage', async ({ homePage, shoppingCartPage }) => {
+  test('[E2E-004] Should add product to favorites from homePage', async ({ homePage }) => {
+    const product = products.hummingbirdTshirt;
     await homePage.navigateTo();
-    await homePage.getProductItem(products[0].title).clickAddToWishlistButton();
+    await homePage.getProductItem(product.title).clickAddToWishlistButton();
     await homePage.myWishlistsModal.selectWishlistByName('My wishlist');
 
     const successToast = homePage.getSuccessToast();
@@ -47,49 +49,8 @@ test.describe('Buy Product', () => {
     expect(successToastText).toContain('Product added');
   });
 
-  //TODO FINISH ME
-  test('[E2E-003] Should change items count in the cart', async ({
-    addProductToTheCart,
-    shoppingCartPage,
-  }) => {
-    const productId = 1;
-    const quantity = 3;
-    const response = await addProductToTheCart({ productId, quantity });
-    expect(response.status()).toBe(200);
-
-    await shoppingCartPage.navigateTo();
-    const countOfProducts = await shoppingCartPage.getCountOfProducts();
-    expect(countOfProducts).toContain(quantity.toString());
 
 
-    await shoppingCartPage.getProductCartItem(products[0].title).clickIncrementQuantity();
-    await shoppingCartPage.waitForNetworkIdle();
-
-    const countOfProductsAfterIncrement = await shoppingCartPage.getCountOfProducts();
-    expect(countOfProductsAfterIncrement).toContain((quantity + 1).toString());
-  });
-
-  //TODO move to separate file
-
-  test('[E2E-003] Should delete item from cart', async ({
-    addProductToTheCart,
-    shoppingCartPage,
-  }) => {
-    const productId = 1;
-    const quantity = 3;
-    const response = await addProductToTheCart({ productId, quantity });
-    expect(response.status()).toBe(200);
-
-    await shoppingCartPage.navigateTo();
-    const countOfProducts = await shoppingCartPage.getCountOfProducts();
-    expect(countOfProducts).toContain(quantity.toString());
-
-    await shoppingCartPage.getProductCartItem(products[0].title).clickDeleteButton();
-    await shoppingCartPage.waitForNetworkIdle();
-
-    const countOfProductsAfterDeletion = await shoppingCartPage.getCountOfProducts();
-    expect(countOfProductsAfterDeletion).toContain('0');
-  });
 
   test('[E2E-005] Should add product to favorites from productPage', async ({ page }) => { });
 

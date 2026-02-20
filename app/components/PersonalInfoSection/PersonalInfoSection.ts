@@ -1,7 +1,7 @@
 import { Locator } from '@playwright/test';
 import BaseComponent from '../Base/BaseComponent';
 import PersonalInfoSectionLocators from './PersonalInfoSectionLocators';
-import type { RequiredPersonalInfoInputs } from '../../../types/checkoutTypes';
+import type { RequiredPersonalInfoInputs } from '../../../types/productTypes';
 
 export default class PersonalInfoSection extends BaseComponent {
   readonly locators: PersonalInfoSectionLocators =
@@ -62,7 +62,7 @@ export default class PersonalInfoSection extends BaseComponent {
     await this.fillTermsCheckbox();
   }
 
-  async createNewAccount({ email, password, birthDate}: { email: string, password: string, birthDate?: string }): Promise<void> {
+  async createNewAccount({ email, password, birthDate }: { email: string, password: string, birthDate?: string }): Promise<void> {
     await this.fillEmailInput(email);
     await this.fillPasswordInput(password);
     if (birthDate) {

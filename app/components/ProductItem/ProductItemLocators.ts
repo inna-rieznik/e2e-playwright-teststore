@@ -19,4 +19,6 @@ export default class ProductItemLocators extends BaseLocators {
   readonly quickViewButton: Locator = this.baseLocator.getByRole('link', {
     name: 'Quick view',
   });
+
+  readonly productItem: Locator = this.baseLocator.locator('article.product-miniature');
 }
