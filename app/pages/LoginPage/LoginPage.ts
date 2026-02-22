@@ -1,3 +1,4 @@
+import { Locator } from '@playwright/test';
 import BasePage from '../Base/BasePage';
 import LoginPageLocators from './LoginPageLocators';
 
@@ -28,5 +29,9 @@ export default class LoginPage extends BasePage {
     await this.fillEmail(email);
     await this.fillPassword(password);
     await this.clickSignInButton();
+  }
+
+  getAuthErrorMessage(): Locator {
+    return this.locators.authErrorMessage;
   }
 }

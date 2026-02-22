@@ -1,4 +1,4 @@
-import { Locator } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 import BaseComponent from "../Base/BaseComponent";
 import HeaderLocators from "./HeaderLocators";
 
@@ -18,6 +18,16 @@ export default class Header extends BaseComponent {
     await this.locators.signOutButton.click();
   }
 
+  async pressEnter() {
+    await this.locators.searchInput.press('Enter');
+  }
+
+  async fillSearchInput(query: string, page: Page) {
+    const responsePromise = page.waitForResponse('**/index.php?controller=search');
+    await this.locators.searchInput.fill(query);
+    await responsePromise;
+  }
+
   getCartProductsCount(): Locator {
     return this.locators.cartButtonProductsCount;
   }
@@ -29,4 +39,5 @@ export default class Header extends BaseComponent {
   getCurrentUserButton(): Locator {
     return this.locators.currentUserButton;
   }
+
 }

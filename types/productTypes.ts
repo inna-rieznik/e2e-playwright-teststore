@@ -10,19 +10,18 @@ export interface ProductQuantity {
   quantity: number;
 }
 
-export interface RequiredAddressInputs {
-  firstName: string;
-  lastName: string;
-  address: string;
-  city: string;
-  state: string;
-  zipPostalCode: string;
-  country: string;
+export type ProductColor = 'White' | 'Black';
+
+export type ProductSize = 'S' | 'M' | 'L' | 'XL';
+
+export interface FilterFacet {
+  facet: string;
+  facetGroupName: string;
 }
 
-export interface OptionalAddressInputs {
-  alias?: string;
-  company?: string;
-  addressComplement?: string;
-  phone?: string;
+export interface WishlistProduct {
+  productId: number;
+  wishlistId: number;
+  productAttributeId: number;
 }
+

@@ -1,7 +1,7 @@
 import { Locator } from "@playwright/test";
 import BasePage from "../Base/BasePage";
 import AccessoriesPageLocators from "./AccessoriesPageLocators";
-import ProductItem from "../../components/ProductItem/ProductItem";
+import { FilterFacet } from "../../../types/productTypes";
 
 export default class AccessoriesPage extends BasePage {
     readonly locators: AccessoriesPageLocators = new AccessoriesPageLocators(this.page.locator('body'));
@@ -11,12 +11,17 @@ export default class AccessoriesPage extends BasePage {
         await this.page.goto('/index.php?id_category=6&controller=category');
     }
 
+    async navigateToWithFilter({ facet, facetGroupName }: FilterFacet): Promise<void> {
+        const transformedFacet = facet.replace(' ', '+');
+        await this.page.goto(`/index.php?id_category=6&controller=category&q=${facetGroupName}-${transformedFacet}&from-xhr`);
+    }
+
     getFacetsWrapper(): Locator {
         return this.locators.facetsWrapper;
     }
 
     getFacet(title: string): Locator {
-        return this.locators.facetsWrapper.getByLabel(title);//.locator('input[type="checkbox"]');
+        return this.locators.facetsWrapper.getByLabel(title);
     }
 
     async checkFacet(title: string): Promise<void> {

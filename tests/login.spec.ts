@@ -1,10 +1,9 @@
 import { expect } from '@playwright/test';
 import { test } from '../fixture';
 import { requireEnv } from '../support';
-import { describe } from 'node:test';
 import { Tags } from '../enums/tags';
 
-//TODO after lesson check if done correct (using of .env values) !!!!
+
 interface User {
   validEmail: string;
   validPassword: string;
@@ -17,38 +16,41 @@ const user: User = {
   validUsername: requireEnv('TEST_USERNAME'),
 };
 
-describe('Login', () => {
+test.describe('Login', () => {
+
+  const invalidCredentials = [
+    { id: 1, scenario: 'invalid email + valid password', email: 'invalid@email.com', password: user.validPassword, expectError: true },
+    { id: 2, scenario: 'valid email + invalid password', email: user.validEmail, password: 'WrongPassword123!', expectError: true },
+    { id: 3, scenario: 'invalid email + invalid password', email: 'invalid@email.com', password: 'WrongPassword123!', expectError: true },
+    { id: 4, scenario: 'empty email + empty password', email: '', password: '', expectError: false },
+  ];
+
+  for (const { id, scenario, email, password, expectError } of invalidCredentials) {
+    test(
+      `[E2E-LGN-${id}] NOT login with ${scenario}`,
+      { tag: [Tags.Regression, Tags.Auth] },
+      async ({ loginPage }) => {
+        await loginPage.navigateTo();
+        await loginPage.performSignIn({ email, password });
+        await loginPage.waitForNetworkIdle();
+
+        if (expectError) {
+          await expect(loginPage.getAuthErrorMessage()).toBeVisible();
+        } else {
+          await expect(loginPage.getAuthErrorMessage()).not.toBeVisible();
+        }
+      }
+    );
+  }
+
   test(
-    '[E2E-001] Should login with valid credentials',
+    '[E2E-LGN-005}] login with valid credentials',
     { tag: [Tags.Smoke, Tags.Regression, Tags.Auth] },
-    async ({ loginPage, page }) => {
+    async ({ loginPage }) => {
       await loginPage.navigateTo();
       await loginPage.performSignIn({ email: user.validEmail, password: user.validPassword });
       await loginPage.waitForNetworkIdle();
       await expect(loginPage.header.locators.userButtonText).toHaveText(user.validUsername);
-    }
-  );
-
-  //TODO make parameterized (
-  // invalid email + valid password,
-  // valid email + invalid password,
-  // invalid email + invalid password,
-  // empty email + empty password)
-  test(
-    '[E2E-002] Should NOT login with invalid credentials',
-    { tag: [Tags.Regression, Tags.Auth] },
-    async ({ page }) => { }
-  );
-
-  test.use({
-    userToLogin: { email: requireEnv('EMAIL'), password: requireEnv('PASSWORD') },
-  });
-
-  test(
-    '[E2E-003] Should login with fixture',
-    { tag: [Tags.Regression, Tags.Auth] },
-    async ({ loginPage }) => {
-      await expect(loginPage.header.locators.userButtonText).toHaveText(requireEnv('EMAIL'));
     }
   );
 });

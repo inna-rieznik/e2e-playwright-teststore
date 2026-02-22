@@ -12,9 +12,7 @@ export default class HeaderLocators extends BaseLocators {
 
   readonly cartButtonProductsCount: Locator = this.baseLocator.locator('.cart-products-count');
 
-  readonly searchInput: Locator = this.baseLocator.locator(
-    '#search_widget input[class="ui-autocomplete-input"]'
-  );
+  readonly searchInput: Locator = this.baseLocator.getByRole('textbox', { name: 'Search' });
 
   readonly logo: Locator = this.baseLocator.locator('#_desktop_logo');
 

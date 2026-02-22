@@ -3,21 +3,26 @@ import { test as base } from '@playwright/test';
 import fs from 'fs';
 import LoginPage from './app/pages/LoginPage/LoginPage';
 import HomePage from './app/pages/HomePage/HomePage';
-import ProductPage from './app/pages/ProductDetailsPage/ProductDetailsPage';
 import ShoppingCartPage from './app/pages/ShoppingCartPage/ShoppingCartPage';
 import CheckoutPage from './app/pages/CheckoutPage/CheckoutPage';
 import { authenticateViaAPI } from './support';
-import { ProductQuantity } from './types/productTypes';
+import { ProductQuantity, WishlistProduct } from './types/productTypes';
+import { UserToCreate } from './types/userTypes';
 import AccessoriesPage from './app/pages/AccessoriesPage/AccessoriesPage';
+import ProductDetailsPage from './app/pages/ProductDetailsPage/ProductDetailsPage';
+import SearchResultsPage from './app/pages/SearchResultsPage/SearchResultsPage';
 
 type MyFixture = {
   loginPage: LoginPage;
   homePage: HomePage;
-  productPage: ProductPage;
+  productDetailsPage: ProductDetailsPage;
   shoppingCartPage: ShoppingCartPage;
   checkoutPage: CheckoutPage;
   accessoriesPage: AccessoriesPage;
+  searchResultsPage: SearchResultsPage;
   addProductToTheCart: (payload: ProductQuantity) => Promise<APIResponse>;
+  deleteProductFromWishlist: (payload: WishlistProduct) => Promise<APIResponse>;
+  createUserViaApi: (user: UserToCreate) => Promise<APIResponse>;
   userToLogin: { email: string; password: string };
   logOutAfterTest: void;
 };
@@ -34,9 +39,9 @@ export const test = base.extend<MyFixture>({
     await use(homePage);
   },
 
-  productPage: async ({ page }, use) => {
-    const productPage = new ProductPage(page);
-    await use(productPage);
+  productDetailsPage: async ({ page }, use) => {
+    const productDetailsPage = new ProductDetailsPage(page);
+    await use(productDetailsPage);
   },
 
   shoppingCartPage: async ({ page }, use) => {
@@ -54,16 +59,19 @@ export const test = base.extend<MyFixture>({
     await use(accessoriesPage);
   },
 
+  searchResultsPage: async ({ page }, use) => {
+    const searchResultsPage = new SearchResultsPage(page);
+    await use(searchResultsPage);
+  },
+
 
   //api
   addProductToTheCart: async ({ page }, use) => {
     const request = page.context().request;
-    const addProductToTheCart = async ({
-      productId,
-      quantity,
-    }: ProductQuantity): Promise<APIResponse> =>
+
+    const addProductToTheCart = async ({ productId, quantity, }: ProductQuantity): Promise<APIResponse> =>
       request.post(
-        'https://teststore.automationtesting.co.uk/index.php?controller=cart',
+        `${process.env.BASE_URL}/index.php?controller=cart`,
         {
           headers: { 'x-requested-with': 'XMLHttpRequest' },
           form: {
@@ -80,6 +88,58 @@ export const test = base.extend<MyFixture>({
         }
       );
     await use(addProductToTheCart);
+  },
+
+  deleteProductFromWishlist: async ({ page }, use) => {
+    const request = page.context().request;
+
+    const deleteProductFromWishlist = async ({
+      productId,
+      wishlistId,
+      productAttributeId,
+    }: WishlistProduct): Promise<APIResponse> =>
+      request.post(
+        `${process.env.BASE_URL}/index.php?action=deleteProductFromWishlist&fc=module&module=blockwishlist&controller=action&params[id_product]=${productId}&params[idWishList]=${wishlistId}&params[id_product_attribute]=${productAttributeId}`,
+        { failOnStatusCode: true }
+      );
+
+    await use(deleteProductFromWishlist);
+  },
+
+  createUserViaApi: async ({ request }, use) => {
+    const createUser = async (user: UserToCreate): Promise<APIResponse> =>
+      request.post(
+        `${process.env.BASE_URL}/index.php?controller=registration`,
+        {
+          form: {
+            email: user.email,
+            gender: user.gender,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            password: user.password,
+            submitCreate: '1',
+          },
+          failOnStatusCode: true,
+          headers: {
+            accept:
+              'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
+            'cache-control': 'max-age=0',
+            'content-type': 'application/x-www-form-urlencoded',
+            priority: 'u=0, i',
+            'sec-ch-ua':
+              '"Not(A:Brand";v="8", "Chromium";v="144", "Google Chrome";v="144"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'same-origin',
+            'sec-fetch-user': '?1',
+            'upgrade-insecure-requests': '1',
+          },
+        }
+      );
+    await use(createUser);
   },
 
   userToLogin: undefined,

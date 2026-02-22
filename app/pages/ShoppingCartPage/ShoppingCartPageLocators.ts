@@ -10,6 +10,8 @@ export default class ShoppingCartPageLocators extends BaseLocators {
     readonly totalPriceTaxExcluded: Locator = this.baseLocator.getByText('Total (tax excl.) $');
     readonly shippingPrice: Locator = this.baseLocator.locator('#cart-subtotal-shipping');
     readonly countOfProducts: Locator = this.baseLocator.locator('.js-subtotal');
+    readonly size: Locator = this.baseLocator.locator('.size > .value');
+    readonly color: Locator = this.baseLocator.locator('.color > .value');
 
 
 }

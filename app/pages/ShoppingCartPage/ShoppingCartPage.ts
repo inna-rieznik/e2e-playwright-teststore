@@ -1,3 +1,4 @@
+import { Locator } from "@playwright/test";
 import ProductCartItem from "../../components/ProductCartItem/ProductCartItem";
 import BasePage from "../Base/BasePage";
 import ShoppingCartPageLocators from "./ShoppingCartPageLocators";
@@ -23,19 +24,27 @@ export default class ShoppingCartPage extends BasePage {
         await this.locators.proceedToCheckoutButton.click();
     }
 
-    async getTotalPriceTaxIncluded(): Promise<string> {
-        return (await this.locators.totalPriceTaxIncluded.textContent()) ?? '';
+    getTotalPriceTaxIncluded(): Locator {
+        return this.locators.totalPriceTaxIncluded;
     }
 
-    async getTotalPriceTaxExcluded(): Promise<string> {
-        return (await this.locators.totalPriceTaxExcluded.textContent()) ?? '';
+    getTotalPriceTaxExcluded(): Locator {
+        return this.locators.totalPriceTaxExcluded;
     }
 
-    async getShippingPrice(): Promise<string> {
-        return (await this.locators.shippingPrice.textContent()) ?? '';
+    getShippingPrice(): Locator {
+        return this.locators.shippingPrice;
     }
 
-    async getCountOfProducts(): Promise<string> {
-        return (await this.locators.countOfProducts.textContent()) ?? '';
+    getCountOfProducts(): Locator {
+        return this.locators.countOfProducts;
+    }
+
+    getSize(): Locator {
+        return this.locators.size;
+    }
+
+    getColor(): Locator {
+        return this.locators.color;
     }
 }
