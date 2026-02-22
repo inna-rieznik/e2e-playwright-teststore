@@ -9,8 +9,7 @@ import { Tags } from "../enums/tags";
 test.describe('Cart Actions', () => {
     test.use({ userToLogin: { email: requireEnv('EMAIL'), password: requireEnv('PASSWORD') } });
 
-    //TODO FINISH ME
-    test('[E2E-CART-001] Should increment items count in the cart',
+    test('[E2E-CART-001] increment items count in the cart',
         { tag: [Tags.Smoke, Tags.Regression] }, async ({
             addProductToTheCart,
             shoppingCartPage,
@@ -25,17 +24,17 @@ test.describe('Cart Actions', () => {
         expect(response.status()).toBe(200);
 
         await shoppingCartPage.navigateTo();
-        const countOfProducts = await shoppingCartPage.getCountOfProducts();
+        const countOfProducts = await shoppingCartPage.getCountOfProducts().textContent();
         expect(countOfProducts).toContain(quantity.toString());
 
         await shoppingCartPage.getProductCartItem(productTitle).clickIncrementQuantity(countToIncrement);
         await shoppingCartPage.waitForNetworkIdle();
 
-        const countOfProductsAfterIncrement = await shoppingCartPage.getCountOfProducts();
+        const countOfProductsAfterIncrement = await shoppingCartPage.getCountOfProducts().textContent();
         expect(countOfProductsAfterIncrement).toContain((quantity + countToIncrement).toString());
     });
 
-    test('[E2E-CART-002] Should decrement items count in the cart',
+    test('[E2E-CART-002] decrement items count in the cart',
         { tag: [Tags.Smoke, Tags.Regression] }, async ({
             addProductToTheCart,
             shoppingCartPage,
@@ -49,17 +48,17 @@ test.describe('Cart Actions', () => {
         expect(response.status()).toBe(200);
 
         await shoppingCartPage.navigateTo();
-        const countOfProducts = await shoppingCartPage.getCountOfProducts();
+        const countOfProducts = await shoppingCartPage.getCountOfProducts().textContent();
         expect(countOfProducts).toContain(quantity.toString());
 
         await shoppingCartPage.getProductCartItem(productTitle).clickDecrementQuantity(countToDecrement);
         await shoppingCartPage.waitForNetworkIdle();
 
-        const countOfProductsAfterDecrement = await shoppingCartPage.getCountOfProducts();
+        const countOfProductsAfterDecrement = await shoppingCartPage.getCountOfProducts().textContent();
         expect(countOfProductsAfterDecrement).toContain((quantity - countToDecrement).toString());
     });
 
-    test('[E2E-CART-003] Should delete item from cart', { tag: [Tags.Smoke, Tags.Regression] }, async ({
+    test('[E2E-CART-003] delete item from cart', { tag: [Tags.Smoke, Tags.Regression] }, async ({
         addProductToTheCart,
         shoppingCartPage,
     }) => {
@@ -70,13 +69,13 @@ test.describe('Cart Actions', () => {
         expect(response.status()).toBe(200);
 
         await shoppingCartPage.navigateTo();
-        const countOfProducts = await shoppingCartPage.getCountOfProducts();
+        const countOfProducts = await shoppingCartPage.getCountOfProducts().textContent();
         expect(countOfProducts).toContain(quantity.toString());
 
         await shoppingCartPage.getProductCartItem(productTitle).clickDeleteButton();
         await shoppingCartPage.waitForNetworkIdle();
 
-        const countOfProductsAfterDeletion = await shoppingCartPage.getCountOfProducts();
+        const countOfProductsAfterDeletion = await shoppingCartPage.getCountOfProducts().textContent();
         expect(countOfProductsAfterDeletion).toContain('0');
     });
 
@@ -100,11 +99,11 @@ test.describe('Cart Actions', () => {
         expect(response2.status()).toBe(200);
 
         await shoppingCartPage.navigateTo();
-        const countOfProducts = await shoppingCartPage.getCountOfProducts();
+        const countOfProducts = await shoppingCartPage.getCountOfProducts().textContent();
         expect(countOfProducts).toContain((quantity1 + quantity2).toString());
 
         const totalPriceForAllProducts = product1TotalPrice + product2TotalPrice;
-        const totalPriceForAllProductsInCart = await shoppingCartPage.getTotalPriceTaxIncluded();
+        const totalPriceForAllProductsInCart = await shoppingCartPage.getTotalPriceTaxIncluded().textContent();
         expect(totalPriceForAllProductsInCart).toContain(totalPriceForAllProducts.toString());
 
 

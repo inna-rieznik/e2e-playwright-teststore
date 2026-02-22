@@ -16,4 +16,6 @@ export default class LoginPageLocators extends BaseLocators {
   readonly createAccountLink = this.baseLocator.getByRole('link', {
     name: 'No account? Create one here',
   });
+
+  readonly authErrorMessage = this.baseLocator.locator('.alert-danger');
 }

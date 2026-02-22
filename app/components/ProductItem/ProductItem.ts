@@ -11,6 +11,7 @@ export default class ProductItem extends BaseComponent {
   }
 
   async clickAddToWishlistButton() {
+    
     await this.locators.addToWishlistButton.click();
   }
 

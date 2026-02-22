@@ -1,9 +1,16 @@
 
-import { Locator } from '@playwright/test';
+import { Locator, Page } from '@playwright/test';
 import ProductItem from '../../components/ProductItem/ProductItem';
 import BasePage from '../Base/BasePage';
+import HomePageLocators from './HomePageLocators';
 
 export default class HomePage extends BasePage {
+  readonly locators: HomePageLocators;
+
+  constructor(page: Page) {
+    super(page);
+    this.locators = new HomePageLocators(this.page.locator('body'));
+  }
 
   async navigateTo() {
     await super.navigateTo('/');
@@ -22,6 +29,16 @@ export default class HomePage extends BasePage {
   getSuccessToast() {
     return this.page.locator(".wishlist-toast.success");
   }
+
+
+  getSearchDropdown(): Locator {
+    return this.locators.searchDropdown;
+  }
+
+  getSearchDropdownItems(): Locator {
+    return this.locators.searchDropdownItems;
+  }
+
 
 
   //popular products -> every product is a new component
