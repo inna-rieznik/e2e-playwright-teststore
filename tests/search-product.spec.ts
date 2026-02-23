@@ -10,47 +10,62 @@ test.describe('Search Product', () => {
 
         const productName = products.hummingbirdTshirt.title.split(' ')[0];
 
-        await homePage.navigateTo();
-        await homePage.header.fillSearchInput(productName, page);
+        await test.step(`Enter search query`, async () => {
+            await homePage.navigateTo();
+            await homePage.header.fillSearchInput(productName, page);
+        });
 
-        const dropdown = homePage.getSearchDropdown();
-        await expect(dropdown).toBeVisible();
+        await test.step(`Check dropdown is visible and contains all products`, async () => {
+            const dropdown = homePage.getSearchDropdown();
+            await expect(dropdown).toBeVisible();
 
-        const allProductsInDropdown = homePage.getSearchDropdownItems();
-        const count = await allProductsInDropdown.count();
-        for (let i = 0; i < count; i++) {
-            await expect(allProductsInDropdown.nth(i)).toContainText(productName);
-        }
+            const allProductsInDropdown = homePage.getSearchDropdownItems();
+            const count = await allProductsInDropdown.count();
+            for (let i = 0; i < count; i++) {
+                await expect(allProductsInDropdown.nth(i)).toContainText(productName);
+            }
+        });
     });
 
     test('[E2E-SRCH-002] show all products containing the search query on the Search results page', { tag: [Tags.Smoke, Tags.Regression] }, async ({ page, homePage, searchResultsPage }) => {
 
         const productName = products.hummingbirdTshirt.title.split(' ')[0];
 
-        await homePage.navigateTo();
-        await homePage.header.fillSearchInput(productName, page);
-        await homePage.header.pressEnter();
+        await test.step(`Enter search query`, async () => {
+            await homePage.navigateTo();
+            await homePage.header.fillSearchInput(productName, page);
+            await homePage.header.pressEnter();
+        });
 
-        const countOfProductsInSearchResults = await searchResultsPage.getProductItem().count();
-        for (let i = 0; i < countOfProductsInSearchResults; i++) {
-            await expect(searchResultsPage.getProductItem().nth(i)).toContainText(productName);
-        }
+        await test.step(`Check if all products on the Search results page contain the search query`, async () => {
+            const countOfProductsInSearchResults = await searchResultsPage.getProductItem().count();
+            for (let i = 0; i < countOfProductsInSearchResults; i++) {
+                await expect(searchResultsPage.getProductItem().nth(i)).toContainText(productName);
+            }
+        });
     });
 
     test('[E2E-SRCH-003] search existing product by name and click on it', { tag: [Tags.Regression] }, async ({ page, homePage, productDetailsPage }) => {
         const productName = products.hummingbirdTshirt.title;
 
-        await homePage.navigateTo();
-        await homePage.header.fillSearchInput(productName, page);
 
-        const dropdown = homePage.getSearchDropdown();
-        await expect(dropdown).toBeVisible();
+        await test.step(`Enter search query`, async () => {
+            await homePage.navigateTo();
+            await homePage.header.fillSearchInput(productName, page);
+        });
 
-        const allProducts = homePage.getSearchDropdownItems();
-        await allProducts.nth(0).click();
+        await test.step(`Click on the first product in the dropdown`, async () => {
+            const dropdown = homePage.getSearchDropdown();
+            await expect(dropdown).toBeVisible();
 
-        const actualProductName = productDetailsPage.productContainer.getProductName();
-        expect(actualProductName).toContainText(productName);
+            const allProducts = homePage.getSearchDropdownItems();
+            await allProducts.nth(0).click();
+        });
+
+        await test.step(`Check if product name is visible on the Product details page`, async () => {
+            const actualProductName = productDetailsPage.productContainer.getProductName();
+            expect(actualProductName).toContainText(productName);
+        });
     });
 
 
@@ -58,12 +73,16 @@ test.describe('Search Product', () => {
         const nonExistingProductName = 'Lorem ipsum dolor sit amet';
         const expectedNoResultsMessage = 'No matches were found for your search';
 
-        await homePage.navigateTo();
-        await homePage.header.fillSearchInput(nonExistingProductName, page);
-        await homePage.header.pressEnter();
+        await test.step(`Enter search query`, async () => {
+            await homePage.navigateTo();
+            await homePage.header.fillSearchInput(nonExistingProductName, page);
+            await homePage.header.pressEnter();
+        });
 
-        const noResults = await searchResultsPage.getNoResultsMessage();
-        await expect(noResults).toContainText(expectedNoResultsMessage);
+        await test.step(`Check if no results message is visible`, async () => {
+            const noResults = await searchResultsPage.getNoResultsMessage();
+            await expect(noResults).toContainText(expectedNoResultsMessage);
+        });
     });
 });
 

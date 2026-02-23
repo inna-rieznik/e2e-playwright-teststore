@@ -29,6 +29,7 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           EMAIL: ${{ secrets.EMAIL }}
           PASSWORD: ${{ secrets.PASSWORD }}
+          TEST_USERNAME: ${{ secrets.TEST_USERNAME }}
         run: npx playwright test
 
       - uses: actions/upload-artifact@v4

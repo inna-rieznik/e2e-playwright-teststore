@@ -27,7 +27,7 @@ test.describe('Login', () => {
 
   for (const { id, scenario, email, password, expectError } of invalidCredentials) {
     test(
-      `[E2E-LGN-${id}] NOT login with ${scenario}`,
+      `[E2E-LGN-00${id}] NOT login with ${scenario}`,
       { tag: [Tags.Regression, Tags.Auth] },
       async ({ loginPage }) => {
 
@@ -49,13 +49,13 @@ test.describe('Login', () => {
   }
 
   test(
-    '[E2E-LGN-005}] login with valid credentials',
+    '[E2E-LGN-005] login with valid credentials',
     { tag: [Tags.Smoke, Tags.Regression, Tags.Auth] },
     async ({ loginPage }) => {
       await test.step(`Login with valid credentials`, async () => {
-      await loginPage.navigateTo();
-      await loginPage.performSignIn({ email: user.validEmail, password: user.validPassword });
-      await loginPage.waitForNetworkIdle();
+        await loginPage.navigateTo();
+        await loginPage.performSignIn({ email: user.validEmail, password: user.validPassword });
+        await loginPage.waitForNetworkIdle();
       });
 
       await test.step(`Check if user button text is visible and contains username`, async () => {
