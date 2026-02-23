@@ -19,23 +19,15 @@ export default class ProductCartItem extends BaseComponent {
     return quantity;
   }
 
-  async getTotalPriceForAllProducts(): Promise<string> {
-    const price = await this.locators.totalPriceForAllProductsRow.textContent();
-    return price ?? '';
+  getTotalPriceForAllProducts(): Locator {
+    const price = this.locators.totalPriceForAllProductsRow;
+    return price;
   }
 
-  async getRegularPriceForOneProduct(): Promise<string> {
-    const price = await this.locators.regularPriceForOneProductRow.textContent();
-    return price ?? '';
+  getRegularPriceForOneProduct(): Locator {
+    const price = this.locators.regularPriceForOneProductRow;
+    return price;
   }
-
-
-
-
-
-  //get price after discount
-  //get discount
-
 
   async clickIncrementQuantity(numberOfClicks: number) {
     for (let i = 0; i < numberOfClicks; i++) {

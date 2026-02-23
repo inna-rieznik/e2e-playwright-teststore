@@ -27,30 +27,41 @@ test.describe('Login', () => {
 
   for (const { id, scenario, email, password, expectError } of invalidCredentials) {
     test(
-      `[E2E-LGN-${id}] NOT login with ${scenario}`,
+      `[E2E-LGN-00${id}] NOT login with ${scenario}`,
       { tag: [Tags.Regression, Tags.Auth] },
       async ({ loginPage }) => {
-        await loginPage.navigateTo();
-        await loginPage.performSignIn({ email, password });
-        await loginPage.waitForNetworkIdle();
 
-        if (expectError) {
-          await expect(loginPage.getAuthErrorMessage()).toBeVisible();
-        } else {
-          await expect(loginPage.getAuthErrorMessage()).not.toBeVisible();
-        }
+        await test.step(`Login with invalid credentials: ${scenario}`, async () => {
+          await loginPage.navigateTo();
+          await loginPage.performSignIn({ email, password });
+          await loginPage.waitForNetworkIdle();
+        });
+
+        await test.step(`Check if error message is visible: ${scenario}`, async () => {
+          if (expectError) {
+            await expect(loginPage.getAuthErrorMessage()).toBeVisible();
+          } else {
+            await expect(loginPage.getAuthErrorMessage()).not.toBeVisible();
+          }
+        });
       }
     );
   }
 
   test(
-    '[E2E-LGN-005}] login with valid credentials',
+    '[E2E-LGN-005] login with valid credentials',
     { tag: [Tags.Smoke, Tags.Regression, Tags.Auth] },
     async ({ loginPage }) => {
-      await loginPage.navigateTo();
-      await loginPage.performSignIn({ email: user.validEmail, password: user.validPassword });
-      await loginPage.waitForNetworkIdle();
-      await expect(loginPage.header.locators.userButtonText).toHaveText(user.validUsername);
+      await test.step(`Login with valid credentials`, async () => {
+        await loginPage.navigateTo();
+        await loginPage.performSignIn({ email: user.validEmail, password: user.validPassword });
+        await loginPage.waitForNetworkIdle();
+      });
+
+      await test.step(`Check if user button text is visible and contains username`, async () => {
+        const userButtonText = loginPage.header.locators.userButtonText;
+        await expect(userButtonText).toHaveText(user.validUsername);
+      });
     }
   );
 });

@@ -13,8 +13,8 @@ export default class SearchResultsPage extends BasePage {
     this.locators = new SearchResultsPageLocators(this.page.locator('body'));
   }
 
-  async getNoResultsMessage(): Promise<string> {
-    return await this.locators.noResultsMessage.textContent() || '';
+  getNoResultsMessage(): Locator {
+    return this.locators.noResultsMessage;
   }
 
   getProductItem(): Locator {

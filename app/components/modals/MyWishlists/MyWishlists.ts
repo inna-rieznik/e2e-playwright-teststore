@@ -1,18 +1,14 @@
 import { Locator } from '@playwright/test';
-import BaseComponent from '../../Base/BaseComponent';
 import MyWishlistsLocators from './MyWishlistsLocators';
+import BaseModal from '../BaseModal/BaseModal';
 
-export default class MyWishlists extends BaseComponent {
+export default class MyWishlists extends BaseModal {
     readonly locators: MyWishlistsLocators = new MyWishlistsLocators(
         this.baseLocator
     );
 
     constructor(locator: Locator) {
         super(locator);
-    }
-
-    async clickCloseButton(): Promise<void> {
-        await this.locators.closeButton.click();
     }
 
     getWishListItemByName(name: string): Locator {

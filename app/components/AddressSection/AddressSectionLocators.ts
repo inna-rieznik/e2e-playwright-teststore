@@ -35,17 +35,14 @@ export default class AddressSectionLocators extends BaseLocators {
 
   readonly checkbox: Locator = this.baseLocator.locator('input[type="radio"]');
 
-  // TODO these locator need when user already exist in the system
   readonly addNewAddressButton: Locator = this.baseLocator
     .getByRole('paragraph')
     .filter({ hasText: 'add new address' });
 
-  //TODO this button exist on every section -> move to parent component
   readonly editButton: Locator = this.baseLocator.getByRole('button', { name: 'Edit' });
 
-  //TODO this is edit and delete current user info, maybe move to another component
   readonly editUserButton: Locator = this.baseLocator.getByRole('link', { name: ' Edit' });
   readonly deleteUserButton: Locator = this.baseLocator.getByRole('link', { name: ' Delete' });
-
+  readonly filledPersonalInfo: Locator = this.baseLocator.locator('article.address-item');
 
 }

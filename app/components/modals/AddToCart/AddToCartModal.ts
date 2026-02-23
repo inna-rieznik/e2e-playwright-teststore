@@ -1,8 +1,8 @@
 import { Locator } from "@playwright/test";
 import AddToCartModalLocators from "./AddToCartModalLocators";
-import BaseComponent from "../../Base/BaseComponent";
+import BaseModal from "../BaseModal/BaseModal";
 
-export default class AddToCartModal extends BaseComponent {
+export default class AddToCartModal extends BaseModal {
     readonly locators: AddToCartModalLocators =
         new AddToCartModalLocators(this.baseLocator);
 
@@ -16,10 +16,6 @@ export default class AddToCartModal extends BaseComponent {
 
     async clickContinueShoppingButton() {
         await this.locators.continueShoppingButton.click();
-    };
-
-    async clickCloseButton() {
-        await this.locators.closeButton.click();
     };
 
     getBannerText() {

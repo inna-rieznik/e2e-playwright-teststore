@@ -11,11 +11,15 @@ export default class ProductItem extends BaseComponent {
   }
 
   async clickAddToWishlistButton() {
-    
+
     await this.locators.addToWishlistButton.click();
   }
 
   async clickProductTitleRow() {
     await this.locators.productTitleRow.click();
   }
+
+  async hoverQuickViewButton() { await this.locators.quickViewButton.hover(); }
+  
+  async clickQuickViewButton() { await this.locators.quickViewButton.click(); }
 }

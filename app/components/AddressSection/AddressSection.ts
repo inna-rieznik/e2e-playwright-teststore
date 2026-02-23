@@ -1,7 +1,7 @@
 import { Locator } from '@playwright/test';
 import BaseComponent from '../Base/BaseComponent';
 import AddressSectionLocators from './AddressSectionLocators';
-import { OptionalAddressInputs, RequiredAddressInputs } from '../../../types/productTypes';
+import { OptionalAddressInputs, RequiredAddressInputs } from '../../../types/userTypes';
 
 export default class AddressSection extends BaseComponent {
   readonly locators: AddressSectionLocators = new AddressSectionLocators(
@@ -12,20 +12,9 @@ export default class AddressSection extends BaseComponent {
     super(locator);
   }
 
-  // private async getLocator(name: string): Promise<Locator> {
-  //   return this.baseLocator.getByRole('textbox', { name: name });
-  // }
-
-  // private async fillInput(locatorName: string, value: string): Promise<void> {
-  //   const locator = await this.getLocator(locatorName);
-  //   await locator.fill(value);
-  // }
-
-  //TODO re wrigth all this methods under one function that will accept locator and value, then using for in loop fill inputs based on data
   private async fillFirstNameInput(firstName: string): Promise<void> {
     await this.locators.firstNameInput.fill(firstName);
   }
-
 
   private async fillLastNameInput(lastName: string): Promise<void> {
     await this.locators.lastNameInput.fill(lastName);
@@ -69,6 +58,10 @@ export default class AddressSection extends BaseComponent {
 
   async checkCheckbox(): Promise<void> {
     await this.locators.checkbox.check();
+  }
+
+  getFilledPersonalInfo(): Locator {
+    return this.locators.filledPersonalInfo;
   }
 
   async clickContinueButton(): Promise<void> {

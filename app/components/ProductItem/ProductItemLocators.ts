@@ -14,7 +14,7 @@ export default class ProductItemLocators extends BaseLocators {
 
   readonly quickViewContainer: Locator = this.baseLocator.locator(
     '.product-miniature > .thumbnail-container > .thumbnail-top > .highlighted-informations'
-  ); //visible only on hover -> opens modal
+  );
 
   readonly quickViewButton: Locator = this.baseLocator.getByRole('link', {
     name: 'Quick view',
