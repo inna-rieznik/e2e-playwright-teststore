@@ -12,16 +12,6 @@ export default class AddressSection extends BaseComponent {
     super(locator);
   }
 
-  // private async getLocator(name: string): Promise<Locator> {
-  //   return this.baseLocator.getByRole('textbox', { name: name });
-  // }
-
-  // private async fillInput(locatorName: string, value: string): Promise<void> {
-  //   const locator = await this.getLocator(locatorName);
-  //   await locator.fill(value);
-  // }
-
-  //TODO re wrigth all this methods under one function that will accept locator and value, then using for in loop fill inputs based on data
   private async fillFirstNameInput(firstName: string): Promise<void> {
     await this.locators.firstNameInput.fill(firstName);
   }

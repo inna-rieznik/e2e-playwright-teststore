@@ -1,11 +1,9 @@
-// baseLocator object is a realization of Facade and Adapter patterns
 
 import { Locator } from '@playwright/test';
 import BaseLocators from '../../pages/Base/BaseLocators';
 
-//this class interacts only with locators
 export default class HeaderLocators extends BaseLocators {
-  //extend from BaseLocators because it already has implemented constructor with initialization of baseLocator
+  
   readonly signInButton: Locator = this.baseLocator.locator('#_desktop_user_info');
 
   readonly cartButton: Locator = this.baseLocator.locator('[class*=blockcart]');

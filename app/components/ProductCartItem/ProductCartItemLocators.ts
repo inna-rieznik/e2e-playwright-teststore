@@ -20,12 +20,4 @@ export default class ProductCartItemLocators extends BaseLocators {
   readonly discountRow: Locator = this.baseLocator.locator('.discount-percentage');
 
   readonly priceWithDiscountForOneProductRow: Locator = this.baseLocator.locator('.current-price');
-
-  // readonly quickViewContainer: Locator = this.baseLocator.locator(
-  //   '.product-miniature > .thumbnail-container > .thumbnail-top > .highlighted-informations'
-  // ); //visible only on hover -> opens modal
-
-  // readonly quickViewButton: Locator = this.baseLocator.getByRole('link', {
-  //   name: 'Quick view',
-  // });
 }

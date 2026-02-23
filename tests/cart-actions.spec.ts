@@ -1,5 +1,3 @@
-//TODO move to separate file
-
 import { expect } from "@playwright/test";
 import { products } from "../data/products";
 import { test } from "../fixture";

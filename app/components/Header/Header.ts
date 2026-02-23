@@ -7,7 +7,7 @@ export default class Header extends BaseComponent {
 
   constructor(locator: Locator) {
     super(locator);
-    this.locators = new HeaderLocators(this.baseLocator); //composition: HAS A
+    this.locators = new HeaderLocators(this.baseLocator);
   }
 
   async clickCartButton() {

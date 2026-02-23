@@ -20,7 +20,4 @@ export default abstract class BasePage {
   async waitForNetworkIdle(): Promise<void> {
     await this.page.waitForLoadState('networkidle');
   }
-
-  //can be methods
-  //reload
 }
