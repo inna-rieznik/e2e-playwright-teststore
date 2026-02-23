@@ -7,7 +7,6 @@ export default abstract class BaseComponent {
   constructor(baseLocator: Locator) {
     this.baseLocator = baseLocator;
     this.continueButtonLocator = this.baseLocator.getByRole('button', { name: 'Continue' });
-    //
   }
 
   async clickContinueButton(): Promise<void> {

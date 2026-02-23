@@ -46,6 +46,6 @@ export default class AddressSectionLocators extends BaseLocators {
   //TODO this is edit and delete current user info, maybe move to another component
   readonly editUserButton: Locator = this.baseLocator.getByRole('link', { name: ' Edit' });
   readonly deleteUserButton: Locator = this.baseLocator.getByRole('link', { name: ' Delete' });
-
+  readonly filledPersonalInfo: Locator = this.baseLocator.locator('article.address-item');
 
 }

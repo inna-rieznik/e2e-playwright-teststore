@@ -7,7 +7,7 @@ import { requireEnv } from "../support";
 import { Tags } from "../enums/tags";
 
 test.describe('Cart Actions', () => {
-    test.use({ userToLogin: { email: requireEnv('EMAIL'), password: requireEnv('PASSWORD') } });
+    test.use({ userToLogin: { email: requireEnv('EMAIL'), password: requireEnv('PASSWORD')} });
 
     test('[E2E-CART-001] increment items count in the cart',
         { tag: [Tags.Smoke, Tags.Regression] }, async ({
@@ -18,20 +18,21 @@ test.describe('Cart Actions', () => {
         const productTitle = products.hummingbirdTshirt.title;
         const productId = products.hummingbirdTshirt.id;
         const quantity = 3;
-        const countToIncrement = 3;
+        const countToIncrement = 4;
 
         const response = await addProductToTheCart({ productId, quantity });
         expect(response.status()).toBe(200);
 
         await shoppingCartPage.navigateTo();
-        const countOfProducts = await shoppingCartPage.getCountOfProducts().textContent();
-        expect(countOfProducts).toContain(quantity.toString());
+
+        const countOfProducts = shoppingCartPage.getCountOfProducts();
+        await expect(countOfProducts).toContainText(quantity.toString());
 
         await shoppingCartPage.getProductCartItem(productTitle).clickIncrementQuantity(countToIncrement);
         await shoppingCartPage.waitForNetworkIdle();
 
-        const countOfProductsAfterIncrement = await shoppingCartPage.getCountOfProducts().textContent();
-        expect(countOfProductsAfterIncrement).toContain((quantity + countToIncrement).toString());
+        const countOfProductsAfterIncrement = shoppingCartPage.getCountOfProducts();
+        await expect(countOfProductsAfterIncrement).toContainText((quantity + countToIncrement).toString());
     });
 
     test('[E2E-CART-002] decrement items count in the cart',
@@ -48,14 +49,14 @@ test.describe('Cart Actions', () => {
         expect(response.status()).toBe(200);
 
         await shoppingCartPage.navigateTo();
-        const countOfProducts = await shoppingCartPage.getCountOfProducts().textContent();
-        expect(countOfProducts).toContain(quantity.toString());
+        const countOfProducts = shoppingCartPage.getCountOfProducts();
+        await expect(countOfProducts).toContainText(quantity.toString());
 
         await shoppingCartPage.getProductCartItem(productTitle).clickDecrementQuantity(countToDecrement);
         await shoppingCartPage.waitForNetworkIdle();
 
-        const countOfProductsAfterDecrement = await shoppingCartPage.getCountOfProducts().textContent();
-        expect(countOfProductsAfterDecrement).toContain((quantity - countToDecrement).toString());
+        const countOfProductsAfterDecrement = shoppingCartPage.getCountOfProducts();
+        await expect(countOfProductsAfterDecrement).toContainText((quantity - countToDecrement).toString());
     });
 
     test('[E2E-CART-003] delete item from cart', { tag: [Tags.Smoke, Tags.Regression] }, async ({
@@ -69,18 +70,17 @@ test.describe('Cart Actions', () => {
         expect(response.status()).toBe(200);
 
         await shoppingCartPage.navigateTo();
-        const countOfProducts = await shoppingCartPage.getCountOfProducts().textContent();
-        expect(countOfProducts).toContain(quantity.toString());
+        const countOfProducts = shoppingCartPage.getCountOfProducts();
+        await expect(countOfProducts).toContainText(quantity.toString());
 
         await shoppingCartPage.getProductCartItem(productTitle).clickDeleteButton();
         await shoppingCartPage.waitForNetworkIdle();
 
-        const countOfProductsAfterDeletion = await shoppingCartPage.getCountOfProducts().textContent();
-        expect(countOfProductsAfterDeletion).toContain('0');
+        const countOfProductsAfterDeletion = shoppingCartPage.getCountOfProducts();
+        await expect(countOfProductsAfterDeletion).toContainText('0');
     });
 
-    //TODO FIX ME - problem with 2 requests in a row
-    test('[E2E-CART-004] Should correctly calculate total price for all products', { tag: [Tags.Smoke, Tags.Regression] }, async ({
+    test('[E2E-CART-004] calculate total price for all products', { tag: [Tags.Smoke, Tags.Regression] }, async ({
         addProductToTheCart,
         shoppingCartPage
     }) => {
@@ -99,16 +99,34 @@ test.describe('Cart Actions', () => {
         expect(response2.status()).toBe(200);
 
         await shoppingCartPage.navigateTo();
-        const countOfProducts = await shoppingCartPage.getCountOfProducts().textContent();
-        expect(countOfProducts).toContain((quantity1 + quantity2).toString());
+        const countOfProducts = shoppingCartPage.getCountOfProducts();
+        await expect(countOfProducts).toContainText((quantity1 + quantity2).toString());
 
         const totalPriceForAllProducts = product1TotalPrice + product2TotalPrice;
-        const totalPriceForAllProductsInCart = await shoppingCartPage.getTotalPriceTaxIncluded().textContent();
-        expect(totalPriceForAllProductsInCart).toContain(totalPriceForAllProducts.toString());
-
-
+        const totalPriceForAllProductsInCart = shoppingCartPage.getTotalPriceTaxIncluded();
+        await expect(totalPriceForAllProductsInCart).toContainText(totalPriceForAllProducts.toString());
 
 
     });
 
+    test('[E2E-CART-005] fill checkout form and place order', async ({ addProductToTheCart, shoppingCartPage, checkoutPage }) => {
+
+        const productId = products.posterBestIsYetToCome.id;
+        const quantity = 3;
+        const userName = 'Test User';
+
+        const response = await addProductToTheCart({ productId, quantity });
+        expect(response.status()).toBe(200);
+
+        await shoppingCartPage.navigateTo();
+        await shoppingCartPage.clickProceedToCheckoutButton();
+
+        const filledInfo = checkoutPage.addressSection.getFilledPersonalInfo();
+        await expect(filledInfo).toContainText(userName);
+
+        await checkoutPage.addressSection.clickContinueButton();
+
+        await checkoutPage.shippingSection.checkCheckboxByTitle('My carrier');
+        await checkoutPage.shippingSection.clickContinueButton();
+    })
 });

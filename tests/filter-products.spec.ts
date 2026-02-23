@@ -7,10 +7,10 @@ test.use({ userToLogin: { email: requireEnv('EMAIL'), password: requireEnv('PASS
 
 test.describe('Filter products', () => {
     test('[E2E-FLTR-001] check only 1 facet at a time', { tag: [Tags.Smoke, Tags.Regression] }, async ({ accessoriesPage }) => {
-
+        const facet = 'Home accessories';
         await accessoriesPage.navigateTo();
-        const checkedFacet = accessoriesPage.getFacet('Home accessories');
-        await accessoriesPage.checkFacet('Home accessories');
+        const checkedFacet = accessoriesPage.getFacet(facet);
+        await accessoriesPage.checkFacet(facet);
         expect(await checkedFacet.isChecked()).toBeTruthy();
 
         const productItemsCount = await accessoriesPage.getProductItem().count();
@@ -26,9 +26,7 @@ test.describe('Filter products', () => {
             const checkedFacet = accessoriesPage.getFacet(facet);
             await accessoriesPage.checkFacet(facet);
             expect(await checkedFacet.isChecked()).toBeTruthy();
-
         }
-        await accessoriesPage.waitForNetworkIdle();
 
         const productItemsCount = await accessoriesPage.getProductItem().count();
         expect(productItemsCount).toBeGreaterThan(1);
@@ -42,7 +40,6 @@ test.describe('Filter products', () => {
         expect(productItemsCount).toBeLessThan(10);
 
         await accessoriesPage.clickClearAllFiltersButton();
-        await accessoriesPage.waitForNetworkIdle();
 
         const productItemsCountAfterClear = await accessoriesPage.getProductItem().count();
         expect(productItemsCountAfterClear).toBeGreaterThan(10);

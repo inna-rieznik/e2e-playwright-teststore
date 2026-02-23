@@ -6,11 +6,6 @@ import { Tags } from '../enums/tags';
 
 test.describe('Buy Product', () => {
 
-  test.afterAll(async () => {
-
-  });
-
-
   test.use({ userToLogin: { email: requireEnv('EMAIL'), password: requireEnv('PASSWORD') } });
 
   test('[E2E-BUY-001] add products to a cart from the home page and check the total price', { tag: [Tags.Smoke, Tags.Regression] }, async ({
@@ -31,13 +26,13 @@ test.describe('Buy Product', () => {
     await productDetailsPage.addToCartModal.clickProceedToCheckoutButton();
 
     const actualProductsCountInACart = shoppingCartPage.header.getCartProductsCount();
-    expect(actualProductsCountInACart).toContainText(count.toString());
+    await expect(actualProductsCountInACart).toContainText(count.toString());
 
     const actualTotalPriceTaxExcluded = shoppingCartPage.getTotalPriceTaxExcluded();
-    expect(actualTotalPriceTaxExcluded).toContainText(expectedTotalPrice.toString());
+    await expect(actualTotalPriceTaxExcluded).toContainText(expectedTotalPrice.toString());
 
     const actualShippingPrice = shoppingCartPage.getShippingPrice();
-    expect(actualShippingPrice).toContainText(expectedShippingPrice);
+    await expect(actualShippingPrice).toContainText(expectedShippingPrice);
   });
 
   test('[E2E-BUY-002] add product to favorites from homePage', { tag: [Tags.Regression] }, async ({
@@ -46,11 +41,14 @@ test.describe('Buy Product', () => {
     deleteProductFromWishlist,
   }) => {
     const product = products.hummingbirdTshirt;
+    const wishlistName = 'My wishlist';
+    const successToastText = 'Product added';
+
     await homePage.navigateTo();
     await homePage.getProductItem(product.title).clickAddToWishlistButton();
 
     const addToWishlistResponsePromise = page.waitForResponse((res) => res.url().includes('addProductToWishlist'));
-    await homePage.myWishlistsModal.selectWishlistByName('My wishlist');
+    await homePage.myWishlistsModal.selectWishlistByName(wishlistName);
     const response = await addToWishlistResponsePromise;
 
     const url = new URL(response.url());
@@ -58,7 +56,7 @@ test.describe('Buy Product', () => {
     const productAttributeId = Number(url.searchParams.get('params[id_product_attribute]'));
 
     const successToast = homePage.getSuccessToast();
-    expect(successToast).toContainText('Product added');
+    await expect(successToast).toContainText(successToastText);
 
     await deleteProductFromWishlist({
       productId: product.id,
@@ -75,22 +73,39 @@ test.describe('Buy Product', () => {
 
     const count = 6;
     const product = products.hummingbirdTshirt;
+    const size = 'M';
+    const color = 'White';
 
     await homePage.navigateTo();
     await homePage.getProductItem(product.title).clickProductTitleRow();
 
     await productDetailsPage.productContainer.setQuantity(count.toString());
-    await productDetailsPage.productContainer.checkColorCheckbox('White');
-    await productDetailsPage.productContainer.selectSize('M');
+    await productDetailsPage.productContainer.checkColorCheckbox(color);
+    await productDetailsPage.productContainer.selectSize(size);
     await productDetailsPage.productContainer.clickAddToCartButton();
     await productDetailsPage.addToCartModal.clickProceedToCheckoutButton();
 
-    const actualSize = await shoppingCartPage.getSize().textContent();
-    expect(actualSize).toContain('M');
+    const actualSize = shoppingCartPage.getSize();
+    await expect(actualSize).toContainText(size);
 
-    const actualColor = await shoppingCartPage.getColor().textContent();
-    expect(actualColor).toContain('White');
+    const actualColor = shoppingCartPage.getColor();
+    await expect(actualColor).toContainText(color);
   });
 
+  test('[E2E-BUY-004] add product to the cart thought quick view', async ({ homePage, shoppingCartPage }) => {
+    const count = 3;
+    const product = products.hummingbirdTshirt;
 
+    await homePage.navigateTo();
+    await homePage.getProductItem(product.title).clickQuickViewButton();
+    homePage.getProductItem(product.title).hoverQuickViewButton();
+    await homePage.getProductItem(product.title).clickQuickViewButton();
+
+    await homePage.quickViewModal.setQuantity(count.toString());
+    await homePage.quickViewModal.clickAddToCartButton();
+    await homePage.addToCartModal.clickProceedToCheckoutButton();
+
+    const actualProductsCountInACart = shoppingCartPage.header.getCartProductsCount();
+    await expect(actualProductsCountInACart).toContainText(count.toString());
+  });
 });

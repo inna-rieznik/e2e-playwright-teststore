@@ -25,7 +25,9 @@ export default class AccessoriesPage extends BasePage {
     }
 
     async checkFacet(title: string): Promise<void> {
+        const responsePromise = this.page.waitForResponse(/id_category=6&controller=category.*from-xhr/);
         await this.getFacet(title).check();
+        await responsePromise;
     }
 
     async uncheckFacet(title: string): Promise<void> {
@@ -37,6 +39,8 @@ export default class AccessoriesPage extends BasePage {
     }
 
     async clickClearAllFiltersButton(): Promise<void> {
+        const responsePromise = this.page.waitForResponse('**/index.php?id_category=6&controller=category&from-xhr');
         await this.locators.clearAllFiltersButton.click();
+        await responsePromise;
     }
 }

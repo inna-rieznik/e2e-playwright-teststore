@@ -23,7 +23,7 @@ test.describe('Search Product', () => {
         }
     });
 
-    test('[E2E-SRCH-002] show all products containing the search query on the search results page', { tag: [Tags.Smoke, Tags.Regression] }, async ({ page, homePage, searchResultsPage }) => {
+    test('[E2E-SRCH-002] show all products containing the search query on the Search results page', { tag: [Tags.Smoke, Tags.Regression] }, async ({ page, homePage, searchResultsPage }) => {
 
         const productName = products.hummingbirdTshirt.title.split(' ')[0];
 
@@ -63,7 +63,7 @@ test.describe('Search Product', () => {
         await homePage.header.pressEnter();
 
         const noResults = await searchResultsPage.getNoResultsMessage();
-        expect(noResults).toContain(expectedNoResultsMessage);
+        await expect(noResults).toContainText(expectedNoResultsMessage);
     });
 });
 

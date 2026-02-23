@@ -22,7 +22,8 @@ const usersToCreate: UserToCreate[] = [
   },
 ];
 
-test('[E2E-CRT-001] create user with unique email via api', { tag: [Tags.Smoke, Tags.Regression] }, async ({ createUserViaApi }) => {
+//this is api test, not e2e, but decided to leave it here for now
+test('[E2E-CRT-001] create user with unique email via API', { tag: [Tags.Smoke, Tags.Regression] }, async ({ createUserViaApi }) => {
   const response = await createUserViaApi(usersToCreate[0]);
 
   const responseBody = await response.text();
